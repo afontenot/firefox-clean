@@ -1,0 +1,12 @@
+diff -r 3702966a64c8 browser/extensions/activity-stream/lib/ActivityStream.jsm
+--- a/browser/extensions/activity-stream/lib/ActivityStream.jsm Sun Nov 12 13:44:46 2017 +0100
++++ b/browser/extensions/activity-stream/lib/ActivityStream.jsm Tue Nov 14 21:05:55 2017 -0800
+@@ -183,7 +183,7 @@
+         "CA": ["en-US", "en-GB", "en-ZA"],
+         "DE": ["de", "de-DE", "de-AT", "de-CH"]
+       })[geo];
+-      return !!locales && locales.includes(locale);
++      return false;
+     }
+   },
+   {

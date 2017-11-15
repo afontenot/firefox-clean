@@ -1,0 +1,11 @@
+diff -r 3702966a64c8 browser/extensions/moz.build
+--- a/browser/extensions/moz.build      Sun Nov 12 13:44:46 2017 +0100
++++ b/browser/extensions/moz.build      Tue Nov 14 21:11:04 2017 -0800
+@@ -12,7 +12,6 @@
+     'formautofill',
+     'onboarding',
+     'pdfjs',
+-    'pocket',
+     'screenshots',
+     'shield-recipe-client',
+     'webcompat',
