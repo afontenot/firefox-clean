@@ -6,7 +6,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=57.0.2
+pkgver=57.0.4
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with features for power users"
 arch=(x86_64)
@@ -179,6 +179,12 @@ pref("browser.safebrowsing.downloads.enabled", false)
 
 // Disable suggested sites
 pref("browser.newtabpage.enhanced", false)
+pref("browser.newtabpage.activity-stream.feeds.snippets", false)
+pref("browser.newtabpage.activity-stream.feeds.section.highlights", false)
+
+// Mozilla has proven they can't be trusted with experiments
+pref("app.shield.optoutstudies.enabled", false)
+pref("browser.onboarding.shieldstudy.enabled", false)
 END
 
   _distini="$pkgdir/usr/lib/$_pkgname/distribution/distribution.ini"
