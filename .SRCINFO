@@ -1,6 +1,6 @@
 pkgbase = firefox-clean
 	pkgdesc = Standalone web browser from mozilla.org, with features for power users
-	pkgver = 57.0.4
+	pkgver = 58.0
 	pkgrel = 1
 	url = https://www.mozilla.org/firefox/
 	arch = x86_64
@@ -36,36 +36,30 @@ pkgbase = firefox-clean
 	depends = sqlite
 	depends = ttf-font
 	depends = libpulse
+	depends = libvpx
+	depends = icu
 	optdepends = networkmanager: Location detection via available WiFi networks
 	optdepends = libnotify: Notification integration
 	optdepends = pulseaudio: Audio support
 	optdepends = speech-dispatcher: Text-to-Speech
-	provides = firefox=57.0.4
+	provides = firefox=58.0
 	conflicts = firefox
 	options = !emptydirs
 	options = !makeflags
 	options = !strip
-	source = hg+https://hg.mozilla.org/mozilla-unified#tag=FIREFOX_57_0_4_RELEASE
+	source = hg+https://hg.mozilla.org/mozilla-unified#tag=FIREFOX_58_0_RELEASE
 	source = firefox.desktop
 	source = firefox-symbolic.svg
-	source = 0001-Bug-1360278-Add-preference-to-trigger-context-menu-o.patch
-	source = 0002-Bug-1419426-Implement-browserSettings.contextMenuSho.patch
-	source = wifi-disentangle.patch
-	source = wifi-fix-interface.patch
 	source = firefox-install-dir.patch
-	source = no-plt.diff
+	source = no-crmf.diff
 	source = disable-pocket.diff
 	source = disable-newtab-ads.diff
 	source = add-restart.diff
 	sha256sums = SKIP
 	sha256sums = 677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a
 	sha256sums = a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9
-	sha256sums = d45c97782a77e7c5ebacfa7b983019f6bb831794d3c707abbe3bb01cddb80f72
-	sha256sums = 52c56c33f7ab98232d9c0644965f149da9b7266f607c84b80aca8a5534cee3bb
-	sha256sums = f068b84ad31556095145d8fefc012dd3d1458948533ed3fff6cbc7250b6e73ed
-	sha256sums = e98a3453d803cc7ddcb81a7dc83f883230dd8591bdf936fc5a868428979ed1f1
 	sha256sums = a94f80abe65608cd49054a30acc31e4d0885fe5b2a38cf08ded5e5b51b87c99d
-	sha256sums = ea8e1b871c0f1dd29cdea1b1a2e7f47bf4713e2ae7b947ec832dba7dfcc67daa
+	sha256sums = fb85a538044c15471c12cf561d6aa74570f8de7b054a7063ef88ee1bdfc1ccbb
 	sha256sums = 328c9ad8dfaf3160b5a3b4140e77cf0dabbc418c0e2b40178eea654e2834683b
 	sha256sums = 02bb9cbb48d79e5829cfa4d6246f91e23cb9c792bc6f0d8e68efc135913998b7
 	sha256sums = 7be9c1d619f8175f722feab04ef5ee9388d6da391135eccc499c68edab8ac998
