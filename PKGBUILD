@@ -6,14 +6,14 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=57.0.4
+pkgver=58.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with features for power users"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
 depends=(gtk3 gtk2 mozilla-common libxt startup-notification mime-types dbus-glib ffmpeg
-         nss hunspell sqlite ttf-font libpulse)
+         nss hunspell sqlite ttf-font libpulse libvpx icu)
 makedepends=(unzip zip diffutils python2 yasm mesa imake gconf inetutils xorg-server-xvfb
              autoconf2.13 rust mercurial clang llvm jack)
 optdepends=('networkmanager: Location detection via available WiFi networks'
@@ -26,20 +26,13 @@ provides=("firefox=$pkgver")
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         $_pkgname.desktop firefox-symbolic.svg
-        0001-Bug-1360278-Add-preference-to-trigger-context-menu-o.patch
-        0002-Bug-1419426-Implement-browserSettings.contextMenuSho.patch
-        wifi-disentangle.patch wifi-fix-interface.patch
-        firefox-install-dir.patch no-plt.diff
+        firefox-install-dir.patch no-crmf.diff
 	disable-pocket.diff disable-newtab-ads.diff add-restart.diff)
 sha256sums=('SKIP'
             '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
             'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
-            'd45c97782a77e7c5ebacfa7b983019f6bb831794d3c707abbe3bb01cddb80f72'
-            '52c56c33f7ab98232d9c0644965f149da9b7266f607c84b80aca8a5534cee3bb'
-            'f068b84ad31556095145d8fefc012dd3d1458948533ed3fff6cbc7250b6e73ed'
-            'e98a3453d803cc7ddcb81a7dc83f883230dd8591bdf936fc5a868428979ed1f1'
             'a94f80abe65608cd49054a30acc31e4d0885fe5b2a38cf08ded5e5b51b87c99d'
-            'ea8e1b871c0f1dd29cdea1b1a2e7f47bf4713e2ae7b947ec832dba7dfcc67daa'
+            'fb85a538044c15471c12cf561d6aa74570f8de7b054a7063ef88ee1bdfc1ccbb'
             '328c9ad8dfaf3160b5a3b4140e77cf0dabbc418c0e2b40178eea654e2834683b'
             '02bb9cbb48d79e5829cfa4d6246f91e23cb9c792bc6f0d8e68efc135913998b7'
             '7be9c1d619f8175f722feab04ef5ee9388d6da391135eccc499c68edab8ac998')
@@ -65,18 +58,8 @@ prepare() {
   cd mozilla-unified
   patch -Np1 -i ../firefox-install-dir.patch
 
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1360278
-  patch -Np1 -i ../0001-Bug-1360278-Add-preference-to-trigger-context-menu-o.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1419426
-  patch -Np1 -i ../0002-Bug-1419426-Implement-browserSettings.contextMenuSho.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
-  patch -Np1 -i ../wifi-disentangle.patch
-  patch -Np1 -i ../wifi-fix-interface.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1382942
-  patch -Np1 -i ../no-plt.diff
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1371991
+  patch -Np1 -i ../no-crmf.diff
 
   # Disable anti-features
   patch -Np1 -i ../disable-pocket.diff
@@ -114,6 +97,11 @@ ac_add_options --with-mozilla-api-keyfile=${PWD@Q}/mozilla-api-key
 # System libraries
 ac_add_options --with-system-zlib
 ac_add_options --with-system-bz2
+ac_add_options --with-system-icu
+ac_add_options --with-system-jpeg
+ac_add_options --with-system-libvpx
+ac_add_options --with-system-nspr
+ac_add_options --with-system-nss
 ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-sqlite
 ac_add_options --enable-system-ffi
@@ -233,8 +221,4 @@ END
   # https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -srf "$pkgdir/usr/bin/$_pkgname" \
     "$pkgdir/usr/lib/$_pkgname/firefox-bin"
-
-  # Use system certificates
-  ln -srf "$pkgdir/usr/lib/libnssckbi.so" \
-    "$pkgdir/usr/lib/$_pkgname/libnssckbi.so"
 }
