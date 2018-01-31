@@ -6,7 +6,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=58.0
+pkgver=58.0.1
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with features for power users"
 arch=(x86_64)
@@ -30,7 +30,7 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	disable-pocket.diff disable-newtab-ads.diff add-restart.diff)
 sha256sums=('SKIP'
             '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
-            'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
+            '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
             'a94f80abe65608cd49054a30acc31e4d0885fe5b2a38cf08ded5e5b51b87c99d'
             'fb85a538044c15471c12cf561d6aa74570f8de7b054a7063ef88ee1bdfc1ccbb'
             '328c9ad8dfaf3160b5a3b4140e77cf0dabbc418c0e2b40178eea654e2834683b'
