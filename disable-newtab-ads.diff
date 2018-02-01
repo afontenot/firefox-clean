@@ -1,7 +1,7 @@
-diff -r 3702966a64c8 browser/extensions/activity-stream/lib/ActivityStream.jsm
---- a/browser/extensions/activity-stream/lib/ActivityStream.jsm Sun Nov 12 13:44:46 2017 +0100
-+++ b/browser/extensions/activity-stream/lib/ActivityStream.jsm Tue Nov 14 21:05:55 2017 -0800
-@@ -183,7 +183,7 @@
+diff -r c2db4a50dc5c browser/extensions/activity-stream/lib/ActivityStream.jsm
+--- a/browser/extensions/activity-stream/lib/ActivityStream.jsm	Wed Jan 24 14:56:48 2018 -0800
++++ b/browser/extensions/activity-stream/lib/ActivityStream.jsm	Wed Jan 31 23:16:11 2018 -0800
+@@ -190,7 +190,7 @@
          "CA": ["en-US", "en-GB", "en-ZA"],
          "DE": ["de", "de-DE", "de-AT", "de-CH"]
        })[geo];
