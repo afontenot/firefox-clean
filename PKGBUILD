@@ -7,7 +7,7 @@
 pkgname=firefox-clean
 _pkgname=firefox
 pkgver=58.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org, with features for power users"
 arch=(x86_64)
 license=(MPL GPL LGPL)
