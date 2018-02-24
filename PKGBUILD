@@ -7,7 +7,7 @@
 pkgname=firefox-clean
 _pkgname=firefox
 pkgver=58.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org, with features for power users"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -28,6 +28,7 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         $_pkgname.desktop firefox-symbolic.svg
         0001-Bug-1430274-Define-MOZ_ALSA-for-more-source-files.-r.patch
         firefox-install-dir.patch no-crmf.diff
+	Bug-1421507.diff
 	disable-pocket.diff disable-newtab-ads.diff add-restart.diff)
 sha256sums=('SKIP'
             '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
@@ -35,6 +36,7 @@ sha256sums=('SKIP'
             'e8a695bd6a007525390c502739c0f00d5d753a1bde7053c21c712075f2c2994d'
             'a94f80abe65608cd49054a30acc31e4d0885fe5b2a38cf08ded5e5b51b87c99d'
             'fb85a538044c15471c12cf561d6aa74570f8de7b054a7063ef88ee1bdfc1ccbb'
+            'a1f8a9edd3fce38e44fd77b3e5e622708dfaae84df3d5bb62f491dceb15d3c8d'
             '9b3f96dde8a5d07cd7fce209a95d7d9b7c3e0dfdc760f97e770af00da3cfcc4e'
             '8addb2cd51c9a6dbf75f4cc587f9dfffc280e2f8d25e25e1b413f4284c368712'
             '3089db5b7cac7702e29ee60109805081797d3a38fcb9907b71211bcb02f1e7c0')
@@ -65,6 +67,9 @@ prepare() {
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1371991
   patch -Np1 -i ../no-crmf.diff
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1421507
+  patch -Np1 -i ../Bug-1421507.diff
 
   # Disable anti-features
   patch -Np1 -i ../disable-pocket.diff
