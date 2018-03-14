@@ -1,7 +1,7 @@
 pkgbase = firefox-clean
 	pkgdesc = Standalone web browser from mozilla.org, with features for power users
-	pkgver = 58.0.2
-	pkgrel = 2
+	pkgver = 59.0
+	pkgrel = 1
 	url = https://www.mozilla.org/firefox/
 	arch = x86_64
 	license = MPL
@@ -23,8 +23,8 @@ pkgbase = firefox-clean
 	makedepends = clang
 	makedepends = llvm
 	makedepends = jack
+	makedepends = gtk2
 	depends = gtk3
-	depends = gtk2
 	depends = mozilla-common
 	depends = libxt
 	depends = startup-notification
@@ -42,28 +42,22 @@ pkgbase = firefox-clean
 	optdepends = libnotify: Notification integration
 	optdepends = pulseaudio: Audio support
 	optdepends = speech-dispatcher: Text-to-Speech
-	provides = firefox=58.0.2
+	provides = firefox=59.0
 	conflicts = firefox
 	options = !emptydirs
 	options = !makeflags
 	options = !strip
-	source = hg+https://hg.mozilla.org/mozilla-unified#tag=FIREFOX_58_0_2_RELEASE
+	source = hg+https://hg.mozilla.org/mozilla-unified#tag=FIREFOX_59_0_RELEASE
 	source = firefox.desktop
 	source = firefox-symbolic.svg
-	source = 0001-Bug-1430274-Define-MOZ_ALSA-for-more-source-files.-r.patch
-	source = firefox-install-dir.patch
 	source = no-crmf.diff
-	source = Bug-1421507.diff
 	source = disable-pocket.diff
 	source = disable-newtab-ads.diff
 	source = add-restart.diff
 	sha256sums = SKIP
 	sha256sums = 677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a
 	sha256sums = 9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797
-	sha256sums = e8a695bd6a007525390c502739c0f00d5d753a1bde7053c21c712075f2c2994d
-	sha256sums = a94f80abe65608cd49054a30acc31e4d0885fe5b2a38cf08ded5e5b51b87c99d
-	sha256sums = fb85a538044c15471c12cf561d6aa74570f8de7b054a7063ef88ee1bdfc1ccbb
-	sha256sums = a1f8a9edd3fce38e44fd77b3e5e622708dfaae84df3d5bb62f491dceb15d3c8d
+	sha256sums = 02000d185e647aa20ca336e595b4004bb29cdae9d8f317f90078bdcc7a36e873
 	sha256sums = 9b3f96dde8a5d07cd7fce209a95d7d9b7c3e0dfdc760f97e770af00da3cfcc4e
 	sha256sums = 8addb2cd51c9a6dbf75f4cc587f9dfffc280e2f8d25e25e1b413f4284c368712
 	sha256sums = 3089db5b7cac7702e29ee60109805081797d3a38fcb9907b71211bcb02f1e7c0
