@@ -6,16 +6,16 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=58.0.2
-pkgrel=2
+pkgver=59.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with features for power users"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
-depends=(gtk3 gtk2 mozilla-common libxt startup-notification mime-types dbus-glib ffmpeg
+depends=(gtk3 mozilla-common libxt startup-notification mime-types dbus-glib ffmpeg
          nss hunspell sqlite ttf-font libpulse libvpx icu)
 makedepends=(unzip zip diffutils python2 yasm mesa imake gconf inetutils xorg-server-xvfb
-             autoconf2.13 rust mercurial clang llvm jack)
+             autoconf2.13 rust mercurial clang llvm jack gtk2)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -25,18 +25,12 @@ conflicts=('firefox')
 provides=("firefox=$pkgver")
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
-        $_pkgname.desktop firefox-symbolic.svg
-        0001-Bug-1430274-Define-MOZ_ALSA-for-more-source-files.-r.patch
-        firefox-install-dir.patch no-crmf.diff
-	Bug-1421507.diff
+        $_pkgname.desktop firefox-symbolic.svg no-crmf.diff
 	disable-pocket.diff disable-newtab-ads.diff add-restart.diff)
 sha256sums=('SKIP'
             '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
-            'e8a695bd6a007525390c502739c0f00d5d753a1bde7053c21c712075f2c2994d'
-            'a94f80abe65608cd49054a30acc31e4d0885fe5b2a38cf08ded5e5b51b87c99d'
-            'fb85a538044c15471c12cf561d6aa74570f8de7b054a7063ef88ee1bdfc1ccbb'
-            'a1f8a9edd3fce38e44fd77b3e5e622708dfaae84df3d5bb62f491dceb15d3c8d'
+            '02000d185e647aa20ca336e595b4004bb29cdae9d8f317f90078bdcc7a36e873'
             '9b3f96dde8a5d07cd7fce209a95d7d9b7c3e0dfdc760f97e770af00da3cfcc4e'
             '8addb2cd51c9a6dbf75f4cc587f9dfffc280e2f8d25e25e1b413f4284c368712'
             '3089db5b7cac7702e29ee60109805081797d3a38fcb9907b71211bcb02f1e7c0')
@@ -60,16 +54,9 @@ prepare() {
   fi
 
   cd mozilla-unified
-  patch -Np1 -i ../firefox-install-dir.patch
-
-  # https://bugs.archlinux.org/task/57285
-  patch -Np1 -i ../0001-Bug-1430274-Define-MOZ_ALSA-for-more-source-files.-r.patch
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1371991
   patch -Np1 -i ../no-crmf.diff
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1421507
-  patch -Np1 -i ../Bug-1421507.diff
 
   # Disable anti-features
   patch -Np1 -i ../disable-pocket.diff
@@ -198,14 +185,10 @@ app.distributor.channel=$_pkgname
 app.partner.archlinux=archlinux
 END
 
-  for i in 16 22 24 32 48 256; do
+  for i in 16 22 24 32 48 64 128 256; do
     install -Dm644 browser/branding/official/default$i.png \
       "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/$_pkgname.png"
   done
-  install -Dm644 browser/branding/official/content/icon64.png \
-    "$pkgdir/usr/share/icons/hicolor/64x64/apps/$_pkgname.png"
-  install -Dm644 browser/branding/official/mozicon128.png \
-    "$pkgdir/usr/share/icons/hicolor/128x128/apps/$_pkgname.png"
   install -Dm644 browser/branding/official/content/about-logo.png \
     "$pkgdir/usr/share/icons/hicolor/192x192/apps/$_pkgname.png"
   install -Dm644 browser/branding/official/content/about-logo@2x.png \
