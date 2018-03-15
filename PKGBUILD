@@ -7,7 +7,7 @@
 pkgname=firefox-clean
 _pkgname=firefox
 pkgver=59.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org, with features for power users"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -138,7 +138,7 @@ package() {
   _vendorjs="$pkgdir/usr/lib/$_pkgname/browser/defaults/preferences/vendor.js"
   install -Dm644 /dev/stdin "$_vendorjs" <<END
 // Use LANG environment variable to choose locale
-pref("intl.locale.matchOS", true);
+pref("intl.locale.requested", "");
 
 // Disable default browser checking.
 pref("browser.shell.checkDefaultBrowser", false);
@@ -200,7 +200,7 @@ END
     "$pkgdir/usr/share/applications/$_pkgname.desktop"
 
   # Use system-provided dictionaries
-  rm -r "$pkgdir"/usr/lib/$_pkgname/dictionaries
+  rm -r "$pkgdir/usr/lib/$_pkgname/dictionaries"
   ln -Ts /usr/share/hunspell "$pkgdir/usr/lib/$_pkgname/dictionaries"
   ln -Ts /usr/share/hyphen "$pkgdir/usr/lib/$_pkgname/hyphenation"
 
