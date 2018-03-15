@@ -1,7 +1,7 @@
 pkgbase = firefox-clean
 	pkgdesc = Standalone web browser from mozilla.org, with features for power users
 	pkgver = 59.0
-	pkgrel = 1
+	pkgrel = 2
 	url = https://www.mozilla.org/firefox/
 	arch = x86_64
 	license = MPL
