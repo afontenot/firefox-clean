@@ -1,7 +1,7 @@
-pkgbase = firefox
-	pkgdesc = Standalone web browser from mozilla.org
+pkgbase = firefox-clean
+	pkgdesc = Standalone web browser from mozilla.org, with features for power users
 	pkgver = 59.0.1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://www.mozilla.org/firefox/
 	arch = x86_64
 	license = MPL
@@ -42,6 +42,8 @@ pkgbase = firefox
 	optdepends = libnotify: Notification integration
 	optdepends = pulseaudio: Audio support
 	optdepends = speech-dispatcher: Text-to-Speech
+	provides = firefox=59.0.1
+	conflicts = firefox
 	options = !emptydirs
 	options = !makeflags
 	options = !strip
@@ -49,10 +51,16 @@ pkgbase = firefox
 	source = firefox.desktop
 	source = firefox-symbolic.svg
 	source = no-crmf.diff
+	source = disable-pocket.diff
+	source = disable-newtab-ads.diff
+	source = add-restart.diff
 	sha256sums = SKIP
 	sha256sums = 677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a
 	sha256sums = 9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797
 	sha256sums = 02000d185e647aa20ca336e595b4004bb29cdae9d8f317f90078bdcc7a36e873
+	sha256sums = 9b3f96dde8a5d07cd7fce209a95d7d9b7c3e0dfdc760f97e770af00da3cfcc4e
+	sha256sums = 8addb2cd51c9a6dbf75f4cc587f9dfffc280e2f8d25e25e1b413f4284c368712
+	sha256sums = 3089db5b7cac7702e29ee60109805081797d3a38fcb9907b71211bcb02f1e7c0
 
-pkgname = firefox
+pkgname = firefox-clean
 
