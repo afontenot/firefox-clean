@@ -1,7 +1,7 @@
 pkgbase = firefox-clean
 	pkgdesc = Standalone web browser from mozilla.org, with features for power users
 	pkgver = 59.0.2
-	pkgrel = 2
+	pkgrel = 3
 	url = https://www.mozilla.org/firefox/
 	arch = x86_64
 	license = MPL
@@ -48,6 +48,7 @@ pkgbase = firefox-clean
 	options = !makeflags
 	options = !strip
 	source = hg+https://hg.mozilla.org/mozilla-unified#tag=FIREFOX_59_0_2_RELEASE
+	source = 0001-Bug-1435212-Add-support-for-FFmpeg-4.0.-r-bryce.patch.xz
 	source = firefox.desktop
 	source = firefox-symbolic.svg
 	source = no-crmf.diff
@@ -55,6 +56,7 @@ pkgbase = firefox-clean
 	source = disable-newtab-ads.diff
 	source = add-restart.diff
 	sha256sums = SKIP
+	sha256sums = 8422030440032535d918844263fbd92d39bff207acb5fff55ed0afee38bcf582
 	sha256sums = 677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a
 	sha256sums = 9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797
 	sha256sums = 02000d185e647aa20ca336e595b4004bb29cdae9d8f317f90078bdcc7a36e873
