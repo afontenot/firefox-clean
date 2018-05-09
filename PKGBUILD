@@ -6,9 +6,9 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=59.0.2
-pkgrel=3
-pkgdesc="Standalone web browser from mozilla.org, with features for power users"
+pkgver=60.0
+pkgrel=1
+pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
@@ -25,10 +25,12 @@ conflicts=('firefox')
 provides=("firefox=$pkgver")
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
+        complete-csd-window-offset-mozilla-1457691.patch.xz
         0001-Bug-1435212-Add-support-for-FFmpeg-4.0.-r-bryce.patch.xz
         $_pkgname.desktop firefox-symbolic.svg no-crmf.diff
 	disable-pocket.diff disable-newtab-ads.diff add-restart.diff)
 sha256sums=('SKIP'
+            'a3fb3c3b6fb775c99afdbad507848b77c5e4bbaac2e8ceeb1bfb47699c4b6268'
             '8422030440032535d918844263fbd92d39bff207acb5fff55ed0afee38bcf582'
             '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
@@ -56,6 +58,9 @@ prepare() {
   fi
 
   cd mozilla-unified
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1283299#c158
+  patch -Np1 -i ../complete-csd-window-offset-mozilla-1457691.patch
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1435212
   patch -Np1 -i ../0001-Bug-1435212-Add-support-for-FFmpeg-4.0.-r-bryce.patch
