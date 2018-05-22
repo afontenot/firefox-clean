@@ -1,7 +1,16 @@
-diff -r c2db4a50dc5c browser/extensions/activity-stream/lib/ActivityStream.jsm
---- a/browser/extensions/activity-stream/lib/ActivityStream.jsm	Wed Jan 24 14:56:48 2018 -0800
-+++ b/browser/extensions/activity-stream/lib/ActivityStream.jsm	Wed Jan 31 23:16:11 2018 -0800
-@@ -190,7 +190,7 @@
+diff -r ea4f3168c604 browser/extensions/activity-stream/lib/ActivityStream.jsm
+--- a/browser/extensions/activity-stream/lib/ActivityStream.jsm	Mon Apr 23 13:48:06 2018 -0700
++++ b/browser/extensions/activity-stream/lib/ActivityStream.jsm	Wed May 09 17:19:53 2018 -0700
+@@ -43,7 +43,7 @@
+ 
+ // Determine if spocs should be shown for a geo/locale
+ function showSpocs({geo}) {
+-  return SPOCS_GEOS.includes(geo);
++  return false;
+ }
+ 
+ // Configure default Activity Stream prefs with a plain `value` or a `getValue`
+@@ -210,7 +210,7 @@
          "CA": ["en-US", "en-GB", "en-ZA"],
          "DE": ["de", "de-DE", "de-AT", "de-CH"]
        })[geo];

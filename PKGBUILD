@@ -6,7 +6,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=60.0
+pkgver=60.0.1
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -35,9 +35,9 @@ sha256sums=('SKIP'
             '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
             '02000d185e647aa20ca336e595b4004bb29cdae9d8f317f90078bdcc7a36e873'
-            '9b3f96dde8a5d07cd7fce209a95d7d9b7c3e0dfdc760f97e770af00da3cfcc4e'
-            '8addb2cd51c9a6dbf75f4cc587f9dfffc280e2f8d25e25e1b413f4284c368712'
-            '3089db5b7cac7702e29ee60109805081797d3a38fcb9907b71211bcb02f1e7c0')
+            'fc1a119682419c763c8506cf60853d4f9f64979fa7547f2f8b14e2d2d8ede8d1'
+            '106b6bf053d57b29969cac0dd1acf5c99917c309793d975ade7ce05edc40ad07'
+            '7f7d3f0ed7fc4f7269e6490eef8ca0a8d17a0b03b8c0be0c6723217e6ef7b63c')
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
