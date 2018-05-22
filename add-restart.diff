@@ -1,6 +1,6 @@
-diff -r c2db4a50dc5c browser/base/content/browser-menubar.inc
---- a/browser/base/content/browser-menubar.inc	Wed Jan 24 14:56:48 2018 -0800
-+++ b/browser/base/content/browser-menubar.inc	Wed Jan 31 23:14:59 2018 -0800
+diff -r ea4f3168c604 browser/base/content/browser-menubar.inc
+--- a/browser/base/content/browser-menubar.inc	Mon Apr 23 13:48:06 2018 -0700
++++ b/browser/base/content/browser-menubar.inc	Wed May 09 17:21:18 2018 -0700
 @@ -93,6 +93,10 @@
                            type="checkbox"
                            observes="workOfflineMenuitemState"
@@ -12,9 +12,9 @@ diff -r c2db4a50dc5c browser/base/content/browser-menubar.inc
                  <menuitem id="menu_FileQuitItem"
  #ifdef XP_WIN
                            label="&quitApplicationCmdWin2.label;"
-diff -r c2db4a50dc5c browser/base/content/browser-sets.inc
---- a/browser/base/content/browser-sets.inc	Wed Jan 24 14:56:48 2018 -0800
-+++ b/browser/base/content/browser-sets.inc	Wed Jan 31 23:14:59 2018 -0800
+diff -r ea4f3168c604 browser/base/content/browser-sets.inc
+--- a/browser/base/content/browser-sets.inc	Mon Apr 23 13:48:06 2018 -0700
++++ b/browser/base/content/browser-sets.inc	Wed May 09 17:21:18 2018 -0700
 @@ -35,6 +35,7 @@
      <command id="cmd_closeWindow" oncommand="BrowserTryToCloseWindow()"/>
      <command id="cmd_toggleMute" oncommand="gBrowser.selectedTab.toggleMuteAudio()"/>
@@ -22,11 +22,11 @@ diff -r c2db4a50dc5c browser/base/content/browser-sets.inc
 +    <command id="cmd_restart" oncommand="restartApplication()"/>
      <command id="cmd_quitApplication" oncommand="goQuitApplication()"/>
  
- 
-diff -r c2db4a50dc5c browser/base/content/browser.js
---- a/browser/base/content/browser.js	Wed Jan 24 14:56:48 2018 -0800
-+++ b/browser/base/content/browser.js	Wed Jan 31 23:14:59 2018 -0800
-@@ -8655,6 +8655,18 @@
+ #include ../../../toolkit/content/editMenuCommands.inc.xul
+diff -r ea4f3168c604 browser/base/content/browser.js
+--- a/browser/base/content/browser.js	Mon Apr 23 13:48:06 2018 -0700
++++ b/browser/base/content/browser.js	Wed May 09 17:21:18 2018 -0700
+@@ -9006,6 +9006,18 @@
    }
  };
  
@@ -45,10 +45,10 @@ diff -r c2db4a50dc5c browser/base/content/browser.js
  // Prompt user to restart the browser in safe mode
  function safeModeRestart() {
    if (Services.appinfo.inSafeMode) {
-diff -r c2db4a50dc5c browser/locales/en-US/chrome/browser/browser.dtd
---- a/browser/locales/en-US/chrome/browser/browser.dtd	Wed Jan 24 14:56:48 2018 -0800
-+++ b/browser/locales/en-US/chrome/browser/browser.dtd	Wed Jan 31 23:14:59 2018 -0800
-@@ -679,6 +679,9 @@
+diff -r ea4f3168c604 browser/locales/en-US/chrome/browser/browser.dtd
+--- a/browser/locales/en-US/chrome/browser/browser.dtd	Mon Apr 23 13:48:06 2018 -0700
++++ b/browser/locales/en-US/chrome/browser/browser.dtd	Wed May 09 17:21:18 2018 -0700
+@@ -689,6 +689,9 @@
  <!ENTITY sidebarCloseButton.tooltip     "Close sidebar">
  <!ENTITY sidebarMenuClose.label         "Close Sidebar">
  
