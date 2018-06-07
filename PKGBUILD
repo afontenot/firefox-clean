@@ -6,7 +6,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=60.0.1
+pkgver=60.0.2
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
