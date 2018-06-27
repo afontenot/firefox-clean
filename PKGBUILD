@@ -6,16 +6,16 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=60.0.2
+pkgver=61.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
 depends=(gtk3 mozilla-common libxt startup-notification mime-types dbus-glib ffmpeg
-         nss hunspell sqlite ttf-font libpulse libvpx icu)
+         nss hunspell-en_US sqlite ttf-font libpulse libvpx icu)
 makedepends=(unzip zip diffutils python2 yasm mesa imake gconf inetutils xorg-server-xvfb
-             autoconf2.13 rust mercurial clang llvm jack gtk2)
+             autoconf2.13 rust mercurial clang llvm jack gtk2 python)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -25,16 +25,11 @@ conflicts=('firefox')
 provides=("firefox=$pkgver")
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
-        complete-csd-window-offset-mozilla-1457691.patch.xz
-        0001-Bug-1435212-Add-support-for-FFmpeg-4.0.-r-bryce.patch.xz
-        $_pkgname.desktop firefox-symbolic.svg no-crmf.diff
+        $_pkgname.desktop firefox-symbolic.svg
 	disable-pocket.diff disable-newtab-ads.diff add-restart.diff)
 sha256sums=('SKIP'
-            'a3fb3c3b6fb775c99afdbad507848b77c5e4bbaac2e8ceeb1bfb47699c4b6268'
-            '8422030440032535d918844263fbd92d39bff207acb5fff55ed0afee38bcf582'
             '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
-            '02000d185e647aa20ca336e595b4004bb29cdae9d8f317f90078bdcc7a36e873'
             'fc1a119682419c763c8506cf60853d4f9f64979fa7547f2f8b14e2d2d8ede8d1'
             '106b6bf053d57b29969cac0dd1acf5c99917c309793d975ade7ce05edc40ad07'
             '7f7d3f0ed7fc4f7269e6490eef8ca0a8d17a0b03b8c0be0c6723217e6ef7b63c')
@@ -58,15 +53,6 @@ prepare() {
   fi
 
   cd mozilla-unified
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1283299#c158
-  patch -Np1 -i ../complete-csd-window-offset-mozilla-1457691.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1435212
-  patch -Np1 -i ../0001-Bug-1435212-Add-support-for-FFmpeg-4.0.-r-bryce.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1371991
-  patch -Np1 -i ../no-crmf.diff
 
   # Disable anti-features
   patch -Np1 -i ../disable-pocket.diff
@@ -109,7 +95,6 @@ ac_add_options --with-system-jpeg
 ac_add_options --with-system-libvpx
 ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
-ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-sqlite
 ac_add_options --enable-system-ffi
 
@@ -119,7 +104,6 @@ ac_add_options --enable-jack
 ac_add_options --enable-startup-notification
 ac_add_options --enable-crashreporter
 ac_add_options --disable-updater
-ac_add_options --disable-stylo
 END
 }
 
@@ -149,12 +133,17 @@ package() {
 // Use LANG environment variable to choose locale
 pref("intl.locale.requested", "");
 
+// Use system-provided dictionaries
+pref("spellchecker.dictionary_path", "/usr/share/hunspell");
+
 // Disable default browser checking.
 pref("browser.shell.checkDefaultBrowser", false);
 
 // Don't disable our bundled extensions in the application directory
 pref("extensions.autoDisableScopes", 11);
 pref("extensions.shownSelectionUI", true);
+<<<<<<< Updated upstream
+=======
 
 // Opt all of us into e10s, instead of just 50%
 pref("browser.tabs.remote.autostart", true);
@@ -179,6 +168,7 @@ pref("browser.newtabpage.activity-stream.feeds.section.highlights", false)
 // Mozilla has proven they can't be trusted with experiments
 pref("app.shield.optoutstudies.enabled", false)
 pref("browser.onboarding.shieldstudy.enabled", false)
+>>>>>>> Stashed changes
 END
 
   _distini="$pkgdir/usr/lib/$_pkgname/distribution/distribution.ini"
@@ -207,11 +197,6 @@ END
 
   install -Dm644 ../$_pkgname.desktop \
     "$pkgdir/usr/share/applications/$_pkgname.desktop"
-
-  # Use system-provided dictionaries
-  rm -r "$pkgdir/usr/lib/$_pkgname/dictionaries"
-  ln -Ts /usr/share/hunspell "$pkgdir/usr/lib/$_pkgname/dictionaries"
-  ln -Ts /usr/share/hyphen "$pkgdir/usr/lib/$_pkgname/hyphenation"
 
   # Install a wrapper to avoid confusion about binary path
   install -Dm755 /dev/stdin "$pkgdir/usr/bin/$_pkgname" <<END
