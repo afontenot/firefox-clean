@@ -1,4 +1,3 @@
-# $Id$
 # Maintainer: afontenot <adam.m.fontenot@gmail.com>
 # Contributor: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Ionut Biru <ibiru@archlinux.org>
@@ -6,7 +5,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=61.0
+pkgver=62.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -47,11 +46,6 @@ _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 _mozilla_api_key=16674381-f021-49de-8622-3021c5942aff
 
 prepare() {
-  if [ ! -d "path" ]; then
-    mkdir path
-    ln -s /usr/bin/python2 path/python
-  fi
-
   cd mozilla-unified
 
   # Disable anti-features
@@ -69,9 +63,9 @@ ac_add_options --enable-application=browser
 
 ac_add_options --prefix=/usr
 ac_add_options --enable-release
-ac_add_options --enable-gold
-ac_add_options --enable-pie
-ac_add_options --enable-optimize="-O2"
+ac_add_options --enable-linker=gold
+ac_add_options --enable-hardening
+ac_add_options --enable-optimize
 ac_add_options --enable-rust-simd
 
 # Branding
@@ -80,7 +74,6 @@ ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.archlinux
 export MOZILLA_OFFICIAL=1
 export MOZ_TELEMETRY_REPORTING=1
-export MOZ_ADDON_SIGNING=1
 export MOZ_REQUIRE_SIGNING=0
 
 # Keys
@@ -110,16 +103,8 @@ END
 build() {
   cd mozilla-unified
 
-  # _FORTIFY_SOURCE causes configure failures
-
-  # CPPFLAGS+=" -O2"
-
-  export PATH="$srcdir/path:$PATH"
   export MOZ_SOURCE_REPO="$_repo"
 
-  # Do PGO
-  #xvfb-run -a -n 95 -s "-extension GLX -screen 0 1280x1024x24" \
-  #  MOZ_PGO=1 ./mach build
   ./mach build
   ./mach buildsymbols
 }
@@ -142,11 +127,6 @@ pref("browser.shell.checkDefaultBrowser", false);
 // Don't disable our bundled extensions in the application directory
 pref("extensions.autoDisableScopes", 11);
 pref("extensions.shownSelectionUI", true);
-<<<<<<< Updated upstream
-=======
-
-// Opt all of us into e10s, instead of just 50%
-pref("browser.tabs.remote.autostart", true);
 
 // DuckDuckGo instead of Yahoo
 pref("browser.search.defaultenginename", "DuckDuckGo")
@@ -156,6 +136,7 @@ pref("browser.search.order.2", "Google")
 pref("browser.search.order.US.1", "DuckDuckGo")
 
 // Disable Google's safe browsing by default
+// Note: Safe Browsing has blocked entire legitimate sites
 pref("browser.safebrowsing.malware.enabled", false)
 pref("browser.safebrowsing.phishing.enabled", false)
 pref("browser.safebrowsing.downloads.enabled", false)
@@ -165,10 +146,12 @@ pref("browser.newtabpage.enhanced", false)
 pref("browser.newtabpage.activity-stream.feeds.snippets", false)
 pref("browser.newtabpage.activity-stream.feeds.section.highlights", false)
 
+// Don't assume user wants to search when typing URLs
+pref("browser.urlbar.suggest.searches", false)
+
 // Mozilla has proven they can't be trusted with experiments
 pref("app.shield.optoutstudies.enabled", false)
 pref("browser.onboarding.shieldstudy.enabled", false)
->>>>>>> Stashed changes
 END
 
   _distini="$pkgdir/usr/lib/$_pkgname/distribution/distribution.ini"
