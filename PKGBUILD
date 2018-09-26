@@ -5,15 +5,15 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=62.0
-pkgrel=1
+pkgver=62.0.2
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
 depends=(gtk3 mozilla-common libxt startup-notification mime-types dbus-glib ffmpeg
          nss hunspell-en_US sqlite ttf-font libpulse libvpx icu)
-makedepends=(unzip zip diffutils python2 yasm mesa imake gconf inetutils xorg-server-xvfb
+makedepends=(unzip zip diffutils python2 yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust mercurial clang llvm jack gtk2 python)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
@@ -25,13 +25,13 @@ provides=("firefox=$pkgver")
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         $_pkgname.desktop firefox-symbolic.svg
-	disable-pocket.diff disable-newtab-ads.diff add-restart.diff)
+	disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff)
 sha256sums=('SKIP'
             '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
-            'fc1a119682419c763c8506cf60853d4f9f64979fa7547f2f8b14e2d2d8ede8d1'
-            '106b6bf053d57b29969cac0dd1acf5c99917c309793d975ade7ce05edc40ad07'
-            '7f7d3f0ed7fc4f7269e6490eef8ca0a8d17a0b03b8c0be0c6723217e6ef7b63c')
+            '508e39c762c085fcf3861f0dbdac464424eee5b25d95456a7be8ad181e15f635'
+            '316f4714fec8ed9d8a038a1d48226d3796f9b783b4f74978dd474911984ea2a3'
+            'd8d8c9510b97f5fc5c43cf63f772efc077291d34f4c07b1f901a68a35fff12be')
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
@@ -49,7 +49,7 @@ prepare() {
   cd mozilla-unified
 
   # Disable anti-features
-  patch -Np1 -i ../disable-pocket.diff
+  patch -Np1 -i ../disable-bad-addons.diff
   patch -Np1 -i ../disable-newtab-ads.diff
 
   # Add restart to file menu
@@ -96,6 +96,7 @@ ac_add_options --enable-alsa
 ac_add_options --enable-jack
 ac_add_options --enable-startup-notification
 ac_add_options --enable-crashreporter
+ac_add_options --disable-gconf
 ac_add_options --disable-updater
 END
 }
@@ -152,6 +153,10 @@ pref("browser.urlbar.suggest.searches", false)
 // Mozilla has proven they can't be trusted with experiments
 pref("app.shield.optoutstudies.enabled", false)
 pref("browser.onboarding.shieldstudy.enabled", false)
+
+// Mozilla now enables telemetry not covered by other policies
+// https://blog.mozilla.org/data/2018/08/20/effectively-measuring-search-in-firefox/
+pref("toolkit.telemetry.coverage.opt-out", true)
 END
 
   _distini="$pkgdir/usr/lib/$_pkgname/distribution/distribution.ini"
@@ -192,3 +197,5 @@ END
   ln -srf "$pkgdir/usr/bin/$_pkgname" \
     "$pkgdir/usr/lib/$_pkgname/firefox-bin"
 }
+
+# vim:set sw=2 et:
