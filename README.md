@@ -3,6 +3,7 @@ A PKGBUILD for Firefox with defaults for the privacy-conscious and power users
 
 Changes 
  * Completely disables Pocket
+ * Completely removes Mozilla's new [remotely pushed hidden extensions](https://blog.mozilla.org/data/2018/08/20/effectively-measuring-search-in-firefox/) (Telemetry Coverage, Search Telemetry, etc). These anti-features don't respect Firefox's telemetry settings.
  * Removes advertisements from the New Tab page and settings for "recommendations"
  * Add option to restart browser to file menu (currently not possible for WebExtensions)
  * Give the user the ability to disable Mozilla addon signing requirement by setting an about:config option

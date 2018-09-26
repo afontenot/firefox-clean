@@ -1,0 +1,15 @@
+diff -r 150c70d39363 browser/extensions/moz.build
+--- a/browser/extensions/moz.build	Tue Sep 18 16:08:09 2018 +0000
++++ b/browser/extensions/moz.build	Wed Sep 26 03:08:51 2018 -0700
+@@ -6,11 +6,9 @@
+ 
+ DIRS += [
+     'activity-stream',
+-    'aushelper',
+     'formautofill',
+     'onboarding',
+     'pdfjs',
+-    'pocket',
+     'screenshots',
+     'webcompat',
+     'webcompat-reporter'
