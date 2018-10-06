@@ -5,7 +5,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=62.0.2
+pkgver=62.0.3
 pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -157,6 +157,9 @@ pref("browser.onboarding.shieldstudy.enabled", false)
 // Mozilla now enables telemetry not covered by other policies
 // https://blog.mozilla.org/data/2018/08/20/effectively-measuring-search-in-firefox/
 pref("toolkit.telemetry.coverage.opt-out", true)
+
+// Disable uploading screenshots
+pref("extensions.screenshots.upload-disabled", true)
 END
 
   _distini="$pkgdir/usr/lib/$_pkgname/distribution/distribution.ini"
