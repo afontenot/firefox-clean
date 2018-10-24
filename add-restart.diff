@@ -1,28 +1,28 @@
-diff -r 150c70d39363 browser/base/content/browser-menubar.inc
---- a/browser/base/content/browser-menubar.inc	Tue Sep 18 16:08:09 2018 +0000
-+++ b/browser/base/content/browser-menubar.inc	Wed Sep 26 03:08:16 2018 -0700
-@@ -92,6 +92,10 @@
+diff -r 84219fbf133c browser/base/content/browser-menubar.inc
+--- a/browser/base/content/browser-menubar.inc  Wed Oct 17 18:50:12 2018 +0000
++++ b/browser/base/content/browser-menubar.inc  Tue Oct 23 18:32:58 2018 -0700
+@@ -90,6 +90,10 @@
+                           accesskey="&goOfflineCmd.accesskey;"
                            type="checkbox"
-                           observes="workOfflineMenuitemState"
-                           oncommand="BrowserOffline.toggleOfflineStatus();"/>
+                           command="cmd_toggleOfflineStatus"/>
 +                <menuitem id="menu_restart"
-+                         label="&menu_restart.label;"
-+                         accesskey="&menu_restart.accesskey;"
-+                         command="cmd_restart"/>
++                          label="&menu_restart.label;"
++                          accesskey="&menu_restart.accesskey;"
++                          command="cmd_restart"/>
                  <menuitem id="menu_FileQuitItem"
  #ifdef XP_WIN
                            label="&quitApplicationCmdWin2.label;"
-diff -r 150c70d39363 browser/base/content/browser-sets.inc
---- a/browser/base/content/browser-sets.inc	Tue Sep 18 16:08:09 2018 +0000
-+++ b/browser/base/content/browser-sets.inc	Wed Sep 26 03:08:16 2018 -0700
-@@ -35,6 +35,7 @@
+diff -r 84219fbf133c browser/base/content/browser-sets.inc
+--- a/browser/base/content/browser-sets.inc     Wed Oct 17 18:50:12 2018 +0000
++++ b/browser/base/content/browser-sets.inc     Tue Oct 23 18:42:49 2018 -0700
+@@ -37,6 +37,7 @@
      <command id="cmd_closeWindow" oncommand="BrowserTryToCloseWindow()"/>
      <command id="cmd_toggleMute" oncommand="gBrowser.selectedTab.toggleMuteAudio()"/>
      <command id="cmd_CustomizeToolbars" oncommand="gCustomizeMode.enter()"/>
 +    <command id="cmd_restart" oncommand="restartApplication()"/>
+     <command id="cmd_toggleOfflineStatus" oncommand="BrowserOffline.toggleOfflineStatus();"/>
      <command id="cmd_quitApplication" oncommand="goQuitApplication()"/>
- 
- #include ../../../toolkit/content/editMenuCommands.inc.xul
+
 diff -r 150c70d39363 browser/base/content/browser.js
 --- a/browser/base/content/browser.js	Tue Sep 18 16:08:09 2018 +0000
 +++ b/browser/base/content/browser.js	Wed Sep 26 03:08:16 2018 -0700

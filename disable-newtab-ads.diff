@@ -1,7 +1,21 @@
-diff -r 150c70d39363 browser/extensions/activity-stream/lib/ActivityStream.jsm
---- a/browser/extensions/activity-stream/lib/ActivityStream.jsm	Tue Sep 18 16:08:09 2018 +0000
-+++ b/browser/extensions/activity-stream/lib/ActivityStream.jsm	Wed Sep 26 03:09:17 2018 -0700
-@@ -46,7 +46,7 @@
+diff -r 84219fbf133c browser/components/newtab/lib/ActivityStream.jsm
+--- a/browser/components/newtab/lib/ActivityStream.jsm	Wed Oct 17 18:50:12 2018 +0000
++++ b/browser/components/newtab/lib/ActivityStream.jsm	Wed Oct 24 02:10:32 2018 -0700
+@@ -19,13 +19,9 @@
+ const {PlacesFeed} = ChromeUtils.import("resource://activity-stream/lib/PlacesFeed.jsm", {});
+ const {PrefsFeed} = ChromeUtils.import("resource://activity-stream/lib/PrefsFeed.jsm", {});
+ const {Store} = ChromeUtils.import("resource://activity-stream/lib/Store.jsm", {});
+-const {SnippetsFeed} = ChromeUtils.import("resource://activity-stream/lib/SnippetsFeed.jsm", {});
+ const {SystemTickFeed} = ChromeUtils.import("resource://activity-stream/lib/SystemTickFeed.jsm", {});
+-const {TelemetryFeed} = ChromeUtils.import("resource://activity-stream/lib/TelemetryFeed.jsm", {});
+ const {FaviconFeed} = ChromeUtils.import("resource://activity-stream/lib/FaviconFeed.jsm", {});
+ const {TopSitesFeed} = ChromeUtils.import("resource://activity-stream/lib/TopSitesFeed.jsm", {});
+-const {TopStoriesFeed} = ChromeUtils.import("resource://activity-stream/lib/TopStoriesFeed.jsm", {});
+-const {HighlightsFeed} = ChromeUtils.import("resource://activity-stream/lib/HighlightsFeed.jsm", {});
+ const {ASRouterFeed} = ChromeUtils.import("resource://activity-stream/lib/ASRouterFeed.jsm", {});
+ 
+ const DEFAULT_SITES = new Map([
+@@ -47,7 +43,7 @@
  
  // Determine if spocs should be shown for a geo/locale
  function showSpocs({geo}) {
@@ -10,7 +24,62 @@ diff -r 150c70d39363 browser/extensions/activity-stream/lib/ActivityStream.jsm
  }
  
  // Configure default Activity Stream prefs with a plain `value` or a `getValue`
-@@ -267,7 +267,7 @@
+@@ -76,7 +72,7 @@
+   }],
+   ["showSponsored", {
+     title: "Show sponsored cards in spoc experiment (show_spocs in topstories.options has to be set to true as well)",
+-    value: true
++    value: false
+   }],
+   ["pocketCta", {
+     title: "Pocket cta and button for logged out users.",
+@@ -113,15 +109,15 @@
+   }],
+   ["disableSnippets", {
+     title: "Disable snippets on activity stream",
+-    value: false
++    value: true
+   }],
+   ["topSitesRows", {
+     title: "Number of rows of Top Sites to display",
+-    value: 1
++    value: 2
+   }],
+   ["telemetry", {
+     title: "Enable system error and usage data collection",
+-    value: true,
++    value: false,
+     value_local_dev: false
+   }],
+   ["telemetry.ut.events", {
+@@ -143,7 +139,7 @@
+   }],
+   ["section.highlights.includePocket", {
+     title: "Boolean flag that decides whether or not to show saved Pocket stories in highlights.",
+-    value: true
++    value: false
+   }],
+   ["section.highlights.includeDownloads", {
+     title: "Boolean flag that decides whether or not to show saved recent Downloads in highlights.",
+@@ -159,7 +155,7 @@
+   }],
+   ["sectionOrder", {
+     title: "The rendering order for the sections",
+-    value: "topsites,topstories,highlights"
++    value: "topsites"
+   }],
+   ["improvesearch.noDefaultSearchTile", {
+     title: "Experiment to remove tiles that are the same as the default search",
+@@ -267,7 +263,7 @@
+     name: "section.highlights",
+     factory: () => new HighlightsFeed(),
+     title: "Fetches content recommendations from places db",
+-    value: true
++    value: false
+   },
+   {
+     name: "section.topstories",
+@@ -280,14 +276,14 @@
          "CA": ["en-CA", "en-GB", "en-US", "en-ZA"],
          "DE": ["de", "de-DE", "de-AT", "de-CH"]
        })[geo];
@@ -19,3 +88,20 @@ diff -r 150c70d39363 browser/extensions/activity-stream/lib/ActivityStream.jsm
      }
    },
    {
+     name: "snippets",
+     factory: () => new SnippetsFeed(),
+     title: "Gets snippets data",
+-    value: true
++    value: false
+   },
+   {
+     name: "systemtick",
+@@ -299,7 +295,7 @@
+     name: "telemetry",
+     factory: () => new TelemetryFeed(),
+     title: "Relays telemetry-related actions to PingCentre",
+-    value: true
++    value: false
+   },
+   {
+     name: "favicon",
