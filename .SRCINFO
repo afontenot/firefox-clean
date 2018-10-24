@@ -1,6 +1,6 @@
 pkgbase = firefox-clean
 	pkgdesc = Standalone web browser from mozilla.org, with defaults for more privacy
-	pkgver = 61.0
+	pkgver = 63.0
 	pkgrel = 1
 	url = https://www.mozilla.org/firefox/
 	arch = x86_64
@@ -10,11 +10,10 @@ pkgbase = firefox-clean
 	makedepends = unzip
 	makedepends = zip
 	makedepends = diffutils
-	makedepends = python2
+	makedepends = python2-setuptools
 	makedepends = yasm
 	makedepends = mesa
 	makedepends = imake
-	makedepends = gconf
 	makedepends = inetutils
 	makedepends = xorg-server-xvfb
 	makedepends = autoconf2.13
@@ -25,6 +24,9 @@ pkgbase = firefox-clean
 	makedepends = jack
 	makedepends = gtk2
 	makedepends = python
+	makedepends = nodejs
+	makedepends = python2-psutil
+	makedepends = cbindgen
 	depends = gtk3
 	depends = mozilla-common
 	depends = libxt
@@ -43,23 +45,23 @@ pkgbase = firefox-clean
 	optdepends = libnotify: Notification integration
 	optdepends = pulseaudio: Audio support
 	optdepends = speech-dispatcher: Text-to-Speech
-	provides = firefox=61.0
+	provides = firefox=63.0
 	conflicts = firefox
 	options = !emptydirs
 	options = !makeflags
 	options = !strip
-	source = hg+https://hg.mozilla.org/mozilla-unified#tag=FIREFOX_61_0_RELEASE
+	source = hg+https://hg.mozilla.org/mozilla-unified#tag=FIREFOX_63_0_RELEASE
 	source = firefox.desktop
 	source = firefox-symbolic.svg
-	source = disable-pocket.diff
+	source = disable-bad-addons.diff
 	source = disable-newtab-ads.diff
 	source = add-restart.diff
 	sha256sums = SKIP
 	sha256sums = 677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a
 	sha256sums = 9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797
-	sha256sums = fc1a119682419c763c8506cf60853d4f9f64979fa7547f2f8b14e2d2d8ede8d1
-	sha256sums = 106b6bf053d57b29969cac0dd1acf5c99917c309793d975ade7ce05edc40ad07
-	sha256sums = 7f7d3f0ed7fc4f7269e6490eef8ca0a8d17a0b03b8c0be0c6723217e6ef7b63c
+	sha256sums = 75b7a8b5a162efcfe1d5417ddda1b8cf556480ca670fa2d8ad06199c98830347
+	sha256sums = 2f2a05efc938c5e6fa69aa25f7e89cf96f79230e614965dc70bff86450a8c4f5
+	sha256sums = 5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634
 
 pkgname = firefox-clean
 

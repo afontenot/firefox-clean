@@ -1,10 +1,10 @@
-diff -r 150c70d39363 browser/extensions/moz.build
---- a/browser/extensions/moz.build	Tue Sep 18 16:08:09 2018 +0000
-+++ b/browser/extensions/moz.build	Wed Sep 26 03:08:51 2018 -0700
-@@ -6,11 +6,9 @@
+diff -r 84219fbf133c browser/extensions/moz.build
+--- a/browser/extensions/moz.build	Wed Oct 17 18:50:12 2018 +0000
++++ b/browser/extensions/moz.build	Tue Oct 23 16:18:37 2018 -0700
+@@ -5,11 +5,9 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
  
  DIRS += [
-     'activity-stream',
 -    'aushelper',
      'formautofill',
      'onboarding',
