@@ -13,3 +13,7 @@ Changes
  Please file a bug report to request additional changes
 
  Don't trust me! Diff this source tree with the original Archlinux package here: [https://git.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/firefox](https://git.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/firefox)
+
+# Other Projects
+
+If you're not an Arch Linux user, consider using this project to create a custom Firefox profile that disables many anti-user features: [https://github.com/allo-/firefox-profilemaker](https://github.com/allo-/firefox-profilemaker).

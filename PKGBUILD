@@ -5,22 +5,23 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=63.0
+pkgver=64.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
 depends=(gtk3 mozilla-common libxt startup-notification mime-types dbus-glib
-         ffmpeg nss hunspell-en_US sqlite ttf-font libpulse libvpx icu)
+         ffmpeg nss ttf-font libpulse sqlite libvpx icu)
 makedepends=(unzip zip diffutils python2-setuptools yasm mesa imake inetutils
              xorg-server-xvfb autoconf2.13 rust mercurial clang llvm jack gtk2
              python nodejs python2-psutil cbindgen)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
-            'speech-dispatcher: Text-to-Speech')
-options=(!emptydirs !makeflags !strip)
+            'speech-dispatcher: Text-to-Speech'
+            'hunspell-en_US: Spell checking, American English')
+options=(!emptydirs !makeflags)
 conflicts=('firefox')
 provides=("firefox=$pkgver")
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -30,8 +31,8 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 sha256sums=('SKIP'
             '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
-            '75b7a8b5a162efcfe1d5417ddda1b8cf556480ca670fa2d8ad06199c98830347'
-            '2f2a05efc938c5e6fa69aa25f7e89cf96f79230e614965dc70bff86450a8c4f5'
+            'fa03df5e93dac27b90433b655421d96f3a5a231330f7047307e500ef9c5da4ef'
+            'b8534133874b2164c9602d238b09b369211c6fa16ae92710c26717d824a6dc63'
             '5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634')
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -70,6 +71,13 @@ ac_add_options --enable-release
 ac_add_options --enable-hardening
 ac_add_options --enable-optimize
 ac_add_options --enable-rust-simd
+ac_add_options --enable-lto
+export MOZ_PGO=1
+export CC=clang
+export CXX=clang++
+export AR=llvm-ar
+export NM=llvm-nm
+export RANLIB=llvm-ranlib
 
 # Branding
 ac_add_options --enable-official-branding
@@ -110,6 +118,9 @@ build() {
   export MOZ_SOURCE_REPO="$_repo"
   export MOZ_NOSPAM=1
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
+
+  # LTO needs more open files
+  ulimit -n 4096
 
   ./mach build
   ./mach buildsymbols
