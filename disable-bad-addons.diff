@@ -1,15 +1,30 @@
-diff -r 84219fbf133c browser/extensions/moz.build
---- a/browser/extensions/moz.build	Wed Oct 17 18:50:12 2018 +0000
-+++ b/browser/extensions/moz.build	Tue Oct 23 16:18:37 2018 -0700
-@@ -5,11 +5,9 @@
- # file, You can obtain one at http://mozilla.org/MPL/2.0/.
- 
- DIRS += [
--    'aushelper',
-     'formautofill',
-     'onboarding',
-     'pdfjs',
+diff -r 8337ebb86a42 browser/components/moz.build
+--- a/browser/components/moz.build	Thu Dec 06 15:18:54 2018 -0500
++++ b/browser/components/moz.build	Tue Dec 11 20:42:07 2018 -0800
+@@ -44,7 +44,6 @@
+     'newtab',
+     'originattributes',
+     'places',
 -    'pocket',
-     'screenshots',
-     'webcompat',
-     'webcompat-reporter'
+     'preferences',
+     'privatebrowsing',
+     'resistfingerprinting',
+diff -r 8337ebb86a42 browser/locales/Makefile.in
+--- a/browser/locales/Makefile.in	Thu Dec 06 15:18:54 2018 -0500
++++ b/browser/locales/Makefile.in	Tue Dec 11 22:08:33 2018 -0800
+@@ -57,7 +57,6 @@
+ ifneq (,$(wildcard ../extensions/formautofill/locales))
+ 	@$(MAKE) -C ../extensions/formautofill/locales AB_CD=$* XPI_NAME=locale-$*
+ endif
+-	@$(MAKE) -C ../components/pocket/locale AB_CD=$* XPI_NAME=locale-$*
+ 	@$(MAKE) -C ../extensions/webcompat-reporter/locales AB_CD=$* XPI_NAME=locale-$*
+ 	@$(MAKE) -C ../../devtools/client/locales AB_CD=$* XPI_NAME=locale-$* XPI_ROOT_APPID='$(XPI_ROOT_APPID)'
+ 	@$(MAKE) -C ../../devtools/startup/locales AB_CD=$* XPI_NAME=locale-$* XPI_ROOT_APPID='$(XPI_ROOT_APPID)'
+@@ -75,7 +74,6 @@
+ ifneq (,$(wildcard ../extensions/formautofill/locales))
+ 	@$(MAKE) -C ../extensions/formautofill/locales chrome AB_CD=$*
+ endif
+-	@$(MAKE) -C ../components/pocket/locale chrome AB_CD=$*
+ 	@$(MAKE) -C ../../devtools/client/locales chrome AB_CD=$*
+ 	@$(MAKE) -C ../../devtools/startup/locales chrome AB_CD=$*
+ 	@$(MAKE) chrome AB_CD=$*

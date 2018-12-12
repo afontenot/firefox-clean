@@ -1,6 +1,6 @@
 pkgbase = firefox-clean
 	pkgdesc = Standalone web browser from mozilla.org, with defaults for more privacy
-	pkgver = 63.0
+	pkgver = 64.0
 	pkgrel = 1
 	url = https://www.mozilla.org/firefox/
 	arch = x86_64
@@ -35,22 +35,21 @@ pkgbase = firefox-clean
 	depends = dbus-glib
 	depends = ffmpeg
 	depends = nss
-	depends = hunspell-en_US
-	depends = sqlite
 	depends = ttf-font
 	depends = libpulse
+	depends = sqlite
 	depends = libvpx
 	depends = icu
 	optdepends = networkmanager: Location detection via available WiFi networks
 	optdepends = libnotify: Notification integration
 	optdepends = pulseaudio: Audio support
 	optdepends = speech-dispatcher: Text-to-Speech
-	provides = firefox=63.0
+	optdepends = hunspell-en_US: Spell checking, American English
+	provides = firefox=64.0
 	conflicts = firefox
 	options = !emptydirs
 	options = !makeflags
-	options = !strip
-	source = hg+https://hg.mozilla.org/mozilla-unified#tag=FIREFOX_63_0_RELEASE
+	source = hg+https://hg.mozilla.org/mozilla-unified#tag=FIREFOX_64_0_RELEASE
 	source = firefox.desktop
 	source = firefox-symbolic.svg
 	source = disable-bad-addons.diff
@@ -59,8 +58,8 @@ pkgbase = firefox-clean
 	sha256sums = SKIP
 	sha256sums = 677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a
 	sha256sums = 9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797
-	sha256sums = 75b7a8b5a162efcfe1d5417ddda1b8cf556480ca670fa2d8ad06199c98830347
-	sha256sums = 2f2a05efc938c5e6fa69aa25f7e89cf96f79230e614965dc70bff86450a8c4f5
+	sha256sums = fa03df5e93dac27b90433b655421d96f3a5a231330f7047307e500ef9c5da4ef
+	sha256sums = b8534133874b2164c9602d238b09b369211c6fa16ae92710c26717d824a6dc63
 	sha256sums = 5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634
 
 pkgname = firefox-clean
