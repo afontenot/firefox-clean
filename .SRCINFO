@@ -1,7 +1,7 @@
 pkgbase = firefox-clean
 	pkgdesc = Standalone web browser from mozilla.org, with defaults for more privacy
 	pkgver = 64.0
-	pkgrel = 1
+	pkgrel = 2
 	url = https://www.mozilla.org/firefox/
 	arch = x86_64
 	license = MPL
@@ -59,7 +59,7 @@ pkgbase = firefox-clean
 	sha256sums = 677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a
 	sha256sums = 9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797
 	sha256sums = fa03df5e93dac27b90433b655421d96f3a5a231330f7047307e500ef9c5da4ef
-	sha256sums = b8534133874b2164c9602d238b09b369211c6fa16ae92710c26717d824a6dc63
+	sha256sums = 3358f0deaf9dfc72fe14ef01377cc2412bd4be6e2201995812b0b177740f6d7f
 	sha256sums = 5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634
 
 pkgname = firefox-clean
