@@ -6,7 +6,7 @@
 pkgname=firefox-clean
 _pkgname=firefox
 pkgver=64.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -32,7 +32,7 @@ sha256sums=('SKIP'
             '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
             'fa03df5e93dac27b90433b655421d96f3a5a231330f7047307e500ef9c5da4ef'
-            'b8534133874b2164c9602d238b09b369211c6fa16ae92710c26717d824a6dc63'
+            '3358f0deaf9dfc72fe14ef01377cc2412bd4be6e2201995812b0b177740f6d7f'
             '5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634')
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
