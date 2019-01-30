@@ -1,7 +1,7 @@
 pkgbase = firefox-clean
 	pkgdesc = Standalone web browser from mozilla.org, with defaults for more privacy
-	pkgver = 64.0
-	pkgrel = 2
+	pkgver = 65.0
+	pkgrel = 1
 	url = https://www.mozilla.org/firefox/
 	arch = x86_64
 	license = MPL
@@ -27,6 +27,7 @@ pkgbase = firefox-clean
 	makedepends = nodejs
 	makedepends = python2-psutil
 	makedepends = cbindgen
+	makedepends = nasm
 	depends = gtk3
 	depends = mozilla-common
 	depends = libxt
@@ -45,11 +46,11 @@ pkgbase = firefox-clean
 	optdepends = pulseaudio: Audio support
 	optdepends = speech-dispatcher: Text-to-Speech
 	optdepends = hunspell-en_US: Spell checking, American English
-	provides = firefox=64.0
+	provides = firefox=65.0
 	conflicts = firefox
 	options = !emptydirs
 	options = !makeflags
-	source = hg+https://hg.mozilla.org/mozilla-unified#tag=FIREFOX_64_0_RELEASE
+	source = hg+https://hg.mozilla.org/mozilla-unified#tag=FIREFOX_65_0_RELEASE
 	source = firefox.desktop
 	source = firefox-symbolic.svg
 	source = disable-bad-addons.diff
