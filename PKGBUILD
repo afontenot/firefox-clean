@@ -5,8 +5,8 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=64.0
-pkgrel=2
+pkgver=65.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -15,7 +15,7 @@ depends=(gtk3 mozilla-common libxt startup-notification mime-types dbus-glib
          ffmpeg nss ttf-font libpulse sqlite libvpx icu)
 makedepends=(unzip zip diffutils python2-setuptools yasm mesa imake inetutils
              xorg-server-xvfb autoconf2.13 rust mercurial clang llvm jack gtk2
-             python nodejs python2-psutil cbindgen)
+             python nodejs python2-psutil cbindgen nasm)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -122,7 +122,7 @@ build() {
   # LTO needs more open files
   ulimit -n 4096
 
-  ./mach build
+  xvfb-run -a -n 97 -s "-screen 0 1600x1200x24" ./mach build
   ./mach buildsymbols
 }
 
