@@ -5,14 +5,14 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=65.0
+pkgver=66.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
 depends=(gtk3 mozilla-common libxt startup-notification mime-types dbus-glib
-         ffmpeg nss ttf-font libpulse sqlite libvpx icu)
+         ffmpeg nss ttf-font libpulse)
 makedepends=(unzip zip diffutils python2-setuptools yasm mesa imake inetutils
              xorg-server-xvfb autoconf2.13 rust mercurial clang llvm jack gtk2
              python nodejs python2-psutil cbindgen nasm)
@@ -26,13 +26,15 @@ conflicts=('firefox')
 provides=("firefox=$pkgver")
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
+        0001-bz-1468911.patch
         $_pkgname.desktop firefox-symbolic.svg
 	disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff)
 sha256sums=('SKIP'
+            '821f858bac2e13ce02b8c20d5387d4ecc8ab2d0e4ebe0a517cbf935da6aeb31b'
             '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
-            'fa03df5e93dac27b90433b655421d96f3a5a231330f7047307e500ef9c5da4ef'
-            '3358f0deaf9dfc72fe14ef01377cc2412bd4be6e2201995812b0b177740f6d7f'
+            '0125e900801ad9c518a83d87fd32304cfc0bc5de872c76d747318c7275d02323'
+            '45baddd18e4b3f914514b18021ea4e4d493a30dc33c2ea44363cc9da263db214'
             '5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634')
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -51,6 +53,9 @@ prepare() {
   mkdir mozbuild
   cd mozilla-unified
 
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1521249
+  patch -Np1 -i ../0001-bz-1468911.patch
+  
   # Disable anti-features
   patch -Np1 -i ../disable-bad-addons.diff
   
@@ -62,6 +67,10 @@ prepare() {
 
   echo -n "$_google_api_key" >google-api-key
   echo -n "$_mozilla_api_key" >mozilla-api-key
+
+  # I recommend we take off and nuke the site from orbit.
+  # It's the only way to be sure.
+  rm -r browser/components/pocket
 
   cat >.mozconfig <<END
 ac_add_options --enable-application=browser
@@ -84,23 +93,18 @@ ac_add_options --enable-official-branding
 ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.archlinux
 export MOZILLA_OFFICIAL=1
+export MOZ_APP_REMOTINGNAME=$pkgname
 export MOZ_TELEMETRY_REPORTING=1
 export MOZ_REQUIRE_SIGNING=0
 
 # Keys
-ac_add_options --with-google-api-keyfile=${PWD@Q}/google-api-key
+ac_add_options --with-google-location-service-api-keyfile=${PWD@Q}/google-api-key
+ac_add_options --with-google-safebrowsing-api-keyfile=${PWD@Q}/google-api-key
 ac_add_options --with-mozilla-api-keyfile=${PWD@Q}/mozilla-api-key
 
 # System libraries
-ac_add_options --enable-system-ffi
-ac_add_options --enable-system-sqlite
-ac_add_options --with-system-bz2
-ac_add_options --with-system-icu
-ac_add_options --with-system-jpeg
-ac_add_options --with-system-libvpx
 ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
-ac_add_options --with-system-zlib
 
 # Features
 ac_add_options --enable-alsa
@@ -146,49 +150,48 @@ pref("extensions.autoDisableScopes", 11);
 pref("extensions.shownSelectionUI", true);
 
 // DuckDuckGo instead of Yahoo
-pref("browser.search.defaultenginename", "DuckDuckGo")
-pref("browser.search.defaultenginename.US", "DuckDuckGo")
-pref("browser.search.order.1", "DuckDuckGo")
-pref("browser.search.order.2", "Google")
-pref("browser.search.order.US.1", "DuckDuckGo")
+pref("browser.search.defaultenginename", "DuckDuckGo");
+pref("browser.search.defaultenginename.US", "DuckDuckGo");
+pref("browser.search.order.1", "DuckDuckGo");
+pref("browser.search.order.2", "Google");
+pref("browser.search.order.US.1", "DuckDuckGo");
 
 // Disable Google's safe browsing by default
 // Note: Safe Browsing has blocked entire legitimate sites
-pref("browser.safebrowsing.malware.enabled", false)
-pref("browser.safebrowsing.phishing.enabled", false)
-pref("browser.safebrowsing.downloads.enabled", false)
+pref("browser.safebrowsing.malware.enabled", false);
+pref("browser.safebrowsing.phishing.enabled", false);
+pref("browser.safebrowsing.downloads.enabled", false);
 
 // Disable suggested sites
-pref("browser.newtabpage.enhanced", false)
-pref("browser.newtabpage.activity-stream.feeds.snippets", false)
-pref("browser.newtabpage.activity-stream.feeds.section.highlights", false)
+pref("browser.newtabpage.enhanced", false);
+pref("browser.newtabpage.activity-stream.feeds.snippets", false);
+pref("browser.newtabpage.activity-stream.feeds.section.highlights", false);
+pref("browser.discovery.enabled", false);
+pref("browser.newtabpage.activity-stream.feeds.discoverystreamfeed", false);
+pref("browser.discovery.containers.enabled", false);
 
 // Don't assume user wants to search when typing URLs
-pref("browser.urlbar.suggest.searches", false)
+pref("browser.urlbar.suggest.searches", false);
 
 // Mozilla has proven they can't be trusted with experiments
-pref("app.shield.optoutstudies.enabled", false)
-pref("browser.onboarding.shieldstudy.enabled", false)
+pref("app.shield.optoutstudies.enabled", false);
+pref("browser.onboarding.shieldstudy.enabled", false);
 
 // Mozilla now enables telemetry not covered by other policies
 // https://blog.mozilla.org/data/2018/08/20/effectively-measuring-search-in-firefox/
-pref("toolkit.telemetry.coverage.opt-out", true)
+pref("toolkit.telemetry.coverage.opt-out", true);
 
 // Disable uploading screenshots
-pref("extensions.screenshots.upload-disabled", true)
+pref("extensions.screenshots.upload-disabled", true);
 END
 
-  _distini="$pkgdir/usr/lib/$_pkgname/distribution/distribution.ini"
-  install -Dm644 /dev/stdin "$_distini" <<END
-[Global]
-id=archlinux
-version=1.0
-about=Mozilla Firefox for Arch Linux
-
-[Preferences]
-app.distributor=archlinux
-app.distributor.channel=$_pkgname
-app.partner.archlinux=archlinux
+  _policies="$pkgdir/usr/lib/$_pkgname/distribution/policies.json"
+  install -Dm644 /dev/stdin "$_policies" <<END
+{
+  "policies": {
+    "DisablePocket": true
+  }
+}
 END
 
   for i in 16 22 24 32 48 64 128 256; do
