@@ -5,7 +5,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=66.0
+pkgver=66.0.4
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -28,29 +28,19 @@ _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         0001-bz-1468911.patch
         $_pkgname.desktop firefox-symbolic.svg
-	disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff)
+	disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff
+        D25415.diff)
 sha256sums=('SKIP'
             '821f858bac2e13ce02b8c20d5387d4ecc8ab2d0e4ebe0a517cbf935da6aeb31b'
-            '677e1bde4c6b3cff114345c211805c7c43085038ca0505718a11e96432e9811a'
+            '4a783dca1f88e003c72f32d22719a0915f3fa576adbc492240e7cc250246ce10'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
             '0125e900801ad9c518a83d87fd32304cfc0bc5de872c76d747318c7275d02323'
             '45baddd18e4b3f914514b18021ea4e4d493a30dc33c2ea44363cc9da263db214'
-            '5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634')
-
-# Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
-# Note: These are for Arch Linux use ONLY. For your own distribution, please
-# get your own set of keys. Feel free to contact foutrelis@archlinux.org for
-# more information.
-_google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
-
-# Mozilla API keys (see https://location.services.mozilla.com/api)
-# Note: These are for Arch Linux use ONLY. For your own distribution, please
-# get your own set of keys. Feel free to contact heftig@archlinux.org for
-# more information.
-_mozilla_api_key=16674381-f021-49de-8622-3021c5942aff
+            '5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634'
+            'e0aefa16fac53cbb84336fef1696a7a2958039eede6f48208b0ea695f82c0a28')
 
 prepare() {
-  mkdir mozbuild
+  mkdir -p mozbuild
   cd mozilla-unified
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1521249
@@ -65,8 +55,9 @@ prepare() {
   # Add restart to file menu
   patch -Np1 -i ../add-restart.diff
 
-  echo -n "$_google_api_key" >google-api-key
-  echo -n "$_mozilla_api_key" >mozilla-api-key
+  # Allow enabling notifications after permission
+  # requests get auto-hidden
+  patch -Np1 -i ../D25415.diff
 
   # I recommend we take off and nuke the site from orbit.
   # It's the only way to be sure.
@@ -93,14 +84,9 @@ ac_add_options --enable-official-branding
 ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.archlinux
 export MOZILLA_OFFICIAL=1
-export MOZ_APP_REMOTINGNAME=$pkgname
-export MOZ_TELEMETRY_REPORTING=1
+export MOZ_APP_REMOTINGNAME=${pkgname//-/}
+export MOZ_TELEMETRY_REPORTING=0
 export MOZ_REQUIRE_SIGNING=0
-
-# Keys
-ac_add_options --with-google-location-service-api-keyfile=${PWD@Q}/google-api-key
-ac_add_options --with-google-safebrowsing-api-keyfile=${PWD@Q}/google-api-key
-ac_add_options --with-mozilla-api-keyfile=${PWD@Q}/mozilla-api-key
 
 # System libraries
 ac_add_options --with-system-nspr
@@ -158,6 +144,7 @@ pref("browser.search.order.US.1", "DuckDuckGo");
 
 // Disable Google's safe browsing by default
 // Note: Safe Browsing has blocked entire legitimate sites
+pref("browser.safebrowsing.enabled", false);
 pref("browser.safebrowsing.malware.enabled", false);
 pref("browser.safebrowsing.phishing.enabled", false);
 pref("browser.safebrowsing.downloads.enabled", false);
@@ -174,15 +161,33 @@ pref("browser.discovery.containers.enabled", false);
 pref("browser.urlbar.suggest.searches", false);
 
 // Mozilla has proven they can't be trusted with experiments
+pref("app.normandy.enabled", false);
 pref("app.shield.optoutstudies.enabled", false);
 pref("browser.onboarding.shieldstudy.enabled", false);
 
 // Mozilla now enables telemetry not covered by other policies
 // https://blog.mozilla.org/data/2018/08/20/effectively-measuring-search-in-firefox/
+pref("toolkit.telemetry.enabled", false)
 pref("toolkit.telemetry.coverage.opt-out", true);
 
 // Disable uploading screenshots
 pref("extensions.screenshots.upload-disabled", true);
+
+// Secure URLbar
+pref("browser.urlbar.oneOffSearches", false);
+pref("browser.urlbar.searchSuggestionsChoice", false);
+pref("browser.search.widget.inNavBar", true);
+
+// Disable requesting notifications access by default
+pref("permissions.default.desktop-notification", 2);
+
+// Security hardening
+pref("security.tls.version.min", 3);
+pref("security.ssl3.rsa_aes_128_sha", false);
+pref("security.ssl3.rsa_aes_256_sha", false);
+pref("security.ssl3.rsa_des_ede3_sha", false);
+pref("security.ssl.require_safe_negotiation", true);
+pref("network.IDN_show_punycode", true);
 END
 
   _policies="$pkgdir/usr/lib/$_pkgname/distribution/policies.json"
