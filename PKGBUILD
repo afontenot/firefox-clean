@@ -5,7 +5,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=66.0.4
+pkgver=67.0.3
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -26,25 +26,23 @@ conflicts=('firefox')
 provides=("firefox=$pkgver")
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
-        0001-bz-1468911.patch
+        0001-bz-1521249.patch
         $_pkgname.desktop firefox-symbolic.svg
-	disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff
-        D25415.diff)
+	disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff)
 sha256sums=('SKIP'
-            '821f858bac2e13ce02b8c20d5387d4ecc8ab2d0e4ebe0a517cbf935da6aeb31b'
+            'd0673786a6a1f1b9f6f66a3a1356afa33f1f18f59dabd92bd193c88c52a1d04c'
             '4a783dca1f88e003c72f32d22719a0915f3fa576adbc492240e7cc250246ce10'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
-            '0125e900801ad9c518a83d87fd32304cfc0bc5de872c76d747318c7275d02323'
-            '45baddd18e4b3f914514b18021ea4e4d493a30dc33c2ea44363cc9da263db214'
-            '5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634'
-            'e0aefa16fac53cbb84336fef1696a7a2958039eede6f48208b0ea695f82c0a28')
+            'f68dd4cf6e9ae902daaf0c218b7ac3d0cf04c0cca68cc2c4d2f33bf8a5be2b81'
+            '54185ac9b1a5e7bf39315670751e29640630e229ed5f8591dbb239a338612de4'
+            '5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634')
 
 prepare() {
   mkdir -p mozbuild
   cd mozilla-unified
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1521249
-  patch -Np1 -i ../0001-bz-1468911.patch
+  patch -Np1 -i ../0001-bz-1521249.patch
   
   # Disable anti-features
   patch -Np1 -i ../disable-bad-addons.diff
@@ -54,10 +52,6 @@ prepare() {
 
   # Add restart to file menu
   patch -Np1 -i ../add-restart.diff
-
-  # Allow enabling notifications after permission
-  # requests get auto-hidden
-  patch -Np1 -i ../D25415.diff
 
   # I recommend we take off and nuke the site from orbit.
   # It's the only way to be sure.
