@@ -1,23 +1,23 @@
-diff -r 164a57c0cdf0 browser/components/newtab/lib/ActivityStream.jsm
---- a/browser/components/newtab/lib/ActivityStream.jsm	Thu Mar 14 19:46:30 2019 +0200
-+++ b/browser/components/newtab/lib/ActivityStream.jsm	Wed Mar 20 08:59:37 2019 -0700
-@@ -21,15 +21,10 @@
- const {PlacesFeed} = ChromeUtils.import("resource://activity-stream/lib/PlacesFeed.jsm", {});
- const {PrefsFeed} = ChromeUtils.import("resource://activity-stream/lib/PrefsFeed.jsm", {});
- const {Store} = ChromeUtils.import("resource://activity-stream/lib/Store.jsm", {});
--const {SnippetsFeed} = ChromeUtils.import("resource://activity-stream/lib/SnippetsFeed.jsm", {});
- const {SystemTickFeed} = ChromeUtils.import("resource://activity-stream/lib/SystemTickFeed.jsm", {});
--const {TelemetryFeed} = ChromeUtils.import("resource://activity-stream/lib/TelemetryFeed.jsm", {});
- const {FaviconFeed} = ChromeUtils.import("resource://activity-stream/lib/FaviconFeed.jsm", {});
- const {TopSitesFeed} = ChromeUtils.import("resource://activity-stream/lib/TopSitesFeed.jsm", {});
--const {TopStoriesFeed} = ChromeUtils.import("resource://activity-stream/lib/TopStoriesFeed.jsm", {});
--const {HighlightsFeed} = ChromeUtils.import("resource://activity-stream/lib/HighlightsFeed.jsm", {});
- const {ASRouterFeed} = ChromeUtils.import("resource://activity-stream/lib/ASRouterFeed.jsm", {});
--const {DiscoveryStreamFeed} = ChromeUtils.import("resource://activity-stream/lib/DiscoveryStreamFeed.jsm", {});
+diff -r 2a7896ba9aa5 browser/components/newtab/lib/ActivityStream.jsm
+--- a/browser/components/newtab/lib/ActivityStream.jsm	Fri May 17 00:46:16 2019 +0300
++++ b/browser/components/newtab/lib/ActivityStream.jsm	Tue May 21 21:47:52 2019 +0000
+@@ -20,15 +20,10 @@
+ const {PlacesFeed} = ChromeUtils.import("resource://activity-stream/lib/PlacesFeed.jsm");
+ const {PrefsFeed} = ChromeUtils.import("resource://activity-stream/lib/PrefsFeed.jsm");
+ const {Store} = ChromeUtils.import("resource://activity-stream/lib/Store.jsm");
+-const {SnippetsFeed} = ChromeUtils.import("resource://activity-stream/lib/SnippetsFeed.jsm");
+ const {SystemTickFeed} = ChromeUtils.import("resource://activity-stream/lib/SystemTickFeed.jsm");
+-const {TelemetryFeed} = ChromeUtils.import("resource://activity-stream/lib/TelemetryFeed.jsm");
+ const {FaviconFeed} = ChromeUtils.import("resource://activity-stream/lib/FaviconFeed.jsm");
+ const {TopSitesFeed} = ChromeUtils.import("resource://activity-stream/lib/TopSitesFeed.jsm");
+-const {TopStoriesFeed} = ChromeUtils.import("resource://activity-stream/lib/TopStoriesFeed.jsm");
+-const {HighlightsFeed} = ChromeUtils.import("resource://activity-stream/lib/HighlightsFeed.jsm");
+ const {ASRouterFeed} = ChromeUtils.import("resource://activity-stream/lib/ASRouterFeed.jsm");
+-const {DiscoveryStreamFeed} = ChromeUtils.import("resource://activity-stream/lib/DiscoveryStreamFeed.jsm");
  
  const DEFAULT_SITES = new Map([
    // This first item is the global list fallback for any unexpected geos
-@@ -48,7 +43,7 @@
+@@ -47,7 +42,7 @@
  
  // Determine if spocs should be shown for a geo/locale
  function showSpocs({geo}) {
@@ -26,7 +26,7 @@ diff -r 164a57c0cdf0 browser/components/newtab/lib/ActivityStream.jsm
  }
  
  // Configure default Activity Stream prefs with a plain `value` or a `getValue`
-@@ -79,7 +74,7 @@
+@@ -78,7 +73,7 @@
    }],
    ["showSponsored", {
      title: "Show sponsored cards in spoc experiment (show_spocs in topstories.options has to be set to true as well)",
@@ -35,7 +35,7 @@ diff -r 164a57c0cdf0 browser/components/newtab/lib/ActivityStream.jsm
    }],
    ["pocketCta", {
      title: "Pocket cta and button for logged out users.",
-@@ -116,20 +111,20 @@
+@@ -103,20 +98,20 @@
    }],
    ["disableSnippets", {
      title: "Disable snippets on activity stream",
@@ -59,8 +59,8 @@ diff -r 164a57c0cdf0 browser/components/newtab/lib/ActivityStream.jsm
 +    value: false,
      value_local_dev: false,
    }],
-   ["telemetry.ping.endpoint", {
-@@ -146,7 +141,7 @@
+   ["telemetry.structuredIngestion", {
+@@ -142,7 +137,7 @@
    }],
    ["section.highlights.includePocket", {
      title: "Boolean flag that decides whether or not to show saved Pocket stories in highlights.",
@@ -69,7 +69,7 @@ diff -r 164a57c0cdf0 browser/components/newtab/lib/ActivityStream.jsm
    }],
    ["section.highlights.includeDownloads", {
      title: "Boolean flag that decides whether or not to show saved recent Downloads in highlights.",
-@@ -162,7 +157,7 @@
+@@ -158,7 +153,7 @@
    }],
    ["sectionOrder", {
      title: "The rendering order for the sections",
@@ -78,16 +78,18 @@ diff -r 164a57c0cdf0 browser/components/newtab/lib/ActivityStream.jsm
    }],
    ["improvesearch.noDefaultSearchTile", {
      title: "Experiment to remove tiles that are the same as the default search",
-@@ -218,7 +213,7 @@
-     value: JSON.stringify({
-       api_key_pref: "extensions.pocket.oAuthConsumerKey",
-       enabled: false,
--      show_spocs: true,
-+      show_spocs: false,
-       // This is currently an exmple layout used for dev purposes.
-       layout_endpoint: "https://getpocket.com/v3/newtab/layout?version=1&consumer_key=$apiKey&layout_variant=basic",
-     }),
-@@ -267,7 +262,7 @@
+@@ -223,8 +218,8 @@
+       const isEnabled = IS_NIGHTLY_OR_UNBRANDED_BUILD && locales && locales.includes(locale);
+       return JSON.stringify({
+         api_key_pref: "extensions.pocket.oAuthConsumerKey",
+-        enabled: isEnabled,
+-        show_spocs: geo === "US",
++        enabled: false,
++        show_spocs: false,
+         // This is currently an exmple layout used for dev purposes.
+         layout_endpoint: "https://getpocket.cdn.mozilla.net/v3/newtab/layout?version=1&consumer_key=$apiKey&layout_variant=basic",
+       });
+@@ -290,7 +285,7 @@
      name: "section.highlights",
      factory: () => new HighlightsFeed(),
      title: "Fetches content recommendations from places db",
@@ -96,7 +98,7 @@ diff -r 164a57c0cdf0 browser/components/newtab/lib/ActivityStream.jsm
    },
    {
      name: "section.topstories",
-@@ -280,14 +275,14 @@
+@@ -303,14 +298,14 @@
          "CA": ["en-CA", "en-GB", "en-US", "en-ZA"],
          "DE": ["de", "de-DE", "de-AT", "de-CH"],
        })[geo];
@@ -113,7 +115,7 @@ diff -r 164a57c0cdf0 browser/components/newtab/lib/ActivityStream.jsm
    },
    {
      name: "systemtick",
-@@ -299,7 +294,7 @@
+@@ -322,7 +317,7 @@
      name: "telemetry",
      factory: () => new TelemetryFeed(),
      title: "Relays telemetry-related actions to PingCentre",
@@ -122,7 +124,7 @@ diff -r 164a57c0cdf0 browser/components/newtab/lib/ActivityStream.jsm
    },
    {
      name: "favicon",
-@@ -323,7 +318,7 @@
+@@ -346,7 +341,7 @@
      name: "discoverystreamfeed",
      factory: () => new DiscoveryStreamFeed(),
      title: "Handles new pocket ui for the new tab page",
@@ -130,3 +132,4 @@ diff -r 164a57c0cdf0 browser/components/newtab/lib/ActivityStream.jsm
 +    value: false,
    },
  ];
+ 
