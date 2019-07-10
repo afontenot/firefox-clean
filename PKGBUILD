@@ -5,7 +5,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=67.0.3
+pkgver=68.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -14,7 +14,7 @@ url="https://www.mozilla.org/firefox/"
 depends=(gtk3 mozilla-common libxt startup-notification mime-types dbus-glib
          ffmpeg nss ttf-font libpulse)
 makedepends=(unzip zip diffutils python2-setuptools yasm mesa imake inetutils
-             xorg-server-xvfb autoconf2.13 rust mercurial clang llvm jack gtk2
+             xorg-server-xvfb autoconf2.13 rust clang llvm jack gtk2
              python nodejs python2-psutil cbindgen nasm)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
@@ -24,26 +24,42 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 options=(!emptydirs !makeflags)
 conflicts=('firefox')
 provides=("firefox=$pkgver")
-_repo=https://hg.mozilla.org/mozilla-unified
-source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
-        0001-bz-1521249.patch
+source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         $_pkgname.desktop firefox-symbolic.svg
 	disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff)
-sha256sums=('SKIP'
-            'd0673786a6a1f1b9f6f66a3a1356afa33f1f18f59dabd92bd193c88c52a1d04c'
+sha256sums=('f7d61a08820088f1280d27f0808e355152c1dd0c94625fd077ced7319e522565'
+            'SKIP'
             '4a783dca1f88e003c72f32d22719a0915f3fa576adbc492240e7cc250246ce10'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
             'f68dd4cf6e9ae902daaf0c218b7ac3d0cf04c0cca68cc2c4d2f33bf8a5be2b81'
-            '54185ac9b1a5e7bf39315670751e29640630e229ed5f8591dbb239a338612de4'
+            'd710d2409024ab8f4a174a9eb54b6dd65f6f1bf3d3dac2347fd759848864eee2'
             '5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634')
+validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
+
+# For telemetry and crash dump analysis to work correctly, we need to tell the
+# build system which Mercurial changeset is our source. Should not be needed
+# anymore once 69 is released:
+# https://bugzilla.mozilla.org/show_bug.cgi?id=1338099
+_repo=https://hg.mozilla.org/releases/mozilla-release
+_tag=FIREFOX_${pkgver//./_}_RELEASE
+
+_changeset=353628fec415324ca6aa333ab6c47d447ecc128e
+_changeset_tag=FIREFOX_68_0_RELEASE
+
+if [[ $1 == update_hgrev ]]; then
+  _changeset=$(hg id -r $_tag --id $_repo --template '{node}')
+  sed -e "/^_changeset=/s/=.*/=$_changeset/;/^_changeset_tag=/s/=.*/=$_tag/" \
+      -i "${BASH_SOURCE[0]}"
+  exit 0
+elif [[ $_tag != $_changeset_tag ]]; then
+  error "Changeset needs update. Run: bash PKGBUILD update_hgrev"
+  exit 1
+fi
 
 prepare() {
-  mkdir -p mozbuild
-  cd mozilla-unified
+  mkdir mozbuild
+  cd firefox-$pkgver
 
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1521249
-  patch -Np1 -i ../0001-bz-1521249.patch
-  
   # Disable anti-features
   patch -Np1 -i ../disable-bad-addons.diff
   
@@ -77,9 +93,9 @@ export RANLIB=llvm-ranlib
 ac_add_options --enable-official-branding
 ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.archlinux
+ac_add_options --with-unsigned-addon-scopes=app,system
 export MOZILLA_OFFICIAL=1
 export MOZ_APP_REMOTINGNAME=${pkgname//-/}
-export MOZ_TELEMETRY_REPORTING=0
 export MOZ_REQUIRE_SIGNING=0
 
 # System libraries
@@ -97,9 +113,10 @@ END
 }
 
 build() {
-  cd mozilla-unified
+  cd firefox-$pkgver
 
   export MOZ_SOURCE_REPO="$_repo"
+  export MOZ_SOURCE_CHANGESET="$_changeset"
   export MOZ_NOSPAM=1
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
 
@@ -111,7 +128,7 @@ build() {
 }
 
 package() {
-  cd mozilla-unified
+  cd firefox-$pkgver
   DESTDIR="$pkgdir" ./mach install
 
   _vendorjs="$pkgdir/usr/lib/$_pkgname/browser/defaults/preferences/vendor.js"
@@ -182,6 +199,7 @@ pref("security.ssl3.rsa_aes_256_sha", false);
 pref("security.ssl3.rsa_des_ede3_sha", false);
 pref("security.ssl.require_safe_negotiation", true);
 pref("network.IDN_show_punycode", true);
+pref("security.certerrors.mitm.auto_enable_enterprise_roots", false);
 END
 
   _policies="$pkgdir/usr/lib/$_pkgname/distribution/policies.json"
