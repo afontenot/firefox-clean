@@ -5,8 +5,8 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=68.0
-pkgrel=1
+pkgver=68.0.1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -21,15 +21,17 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support'
             'speech-dispatcher: Text-to-Speech'
             'hunspell-en_US: Spell checking, American English')
-options=(!emptydirs !makeflags)
+options=(!emptydirs !makeflags !strip)
 conflicts=('firefox')
 provides=("firefox=$pkgver")
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
+        0001-Use-remoting-name-for-GDK-application-names.patch
         $_pkgname.desktop firefox-symbolic.svg
 	disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff)
-sha256sums=('f7d61a08820088f1280d27f0808e355152c1dd0c94625fd077ced7319e522565'
+sha256sums=('6037f77bdab29d79ca5e3fbd1d32f6c209e09d2066189a13dc7f7491227f5568'
             'SKIP'
-            '4a783dca1f88e003c72f32d22719a0915f3fa576adbc492240e7cc250246ce10'
+            'ab07ab26617ff76fce68e07c66b8aa9b96c2d3e5b5517e51a3c3eac2edd88894'
+            'a9e5264257041c0b968425b5c97436ba48e8d294e1a0f02c59c35461ea245c33'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
             'f68dd4cf6e9ae902daaf0c218b7ac3d0cf04c0cca68cc2c4d2f33bf8a5be2b81'
             'd710d2409024ab8f4a174a9eb54b6dd65f6f1bf3d3dac2347fd759848864eee2'
@@ -43,8 +45,8 @@ validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Rel
 _repo=https://hg.mozilla.org/releases/mozilla-release
 _tag=FIREFOX_${pkgver//./_}_RELEASE
 
-_changeset=353628fec415324ca6aa333ab6c47d447ecc128e
-_changeset_tag=FIREFOX_68_0_RELEASE
+_changeset=837bbcb850cd58eb07c7f6437078d5229986967c
+_changeset_tag=FIREFOX_68_0_1_RELEASE
 
 if [[ $1 == update_hgrev ]]; then
   _changeset=$(hg id -r $_tag --id $_repo --template '{node}')
@@ -59,6 +61,9 @@ fi
 prepare() {
   mkdir mozbuild
   cd firefox-$pkgver
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
+  patch -Np1 -i ../0001-Use-remoting-name-for-GDK-application-names.patch
 
   # Disable anti-features
   patch -Np1 -i ../disable-bad-addons.diff
