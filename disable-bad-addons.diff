@@ -1,6 +1,6 @@
 diff -r 8337ebb86a42 browser/components/moz.build
---- a/browser/components/moz.build	Thu Dec 06 15:18:54 2018 -0500
-+++ b/browser/components/moz.build	Tue Dec 11 20:42:07 2018 -0800
+--- a/browser/components/moz.build      Thu Dec 06 15:18:54 2018 -0500
++++ b/browser/components/moz.build      Tue Dec 11 20:42:07 2018 -0800
 @@ -44,7 +44,6 @@
      'newtab',
      'originattributes',
@@ -10,8 +10,8 @@ diff -r 8337ebb86a42 browser/components/moz.build
      'privatebrowsing',
      'resistfingerprinting',
 diff -r 164a57c0cdf0 browser/components/BrowserGlue.jsm
---- a/browser/components/BrowserGlue.jsm	Thu Mar 14 19:46:30 2019 +0200
-+++ b/browser/components/BrowserGlue.jsm	Thu Mar 21 16:29:36 2019 -0700
+--- a/browser/components/BrowserGlue.jsm        Thu Mar 14 19:46:30 2019 +0200
++++ b/browser/components/BrowserGlue.jsm        Thu Mar 21 16:29:36 2019 -0700
 @@ -426,7 +426,6 @@
    RemoteSettings: "resource://services-settings/remote-settings.js",
    SafeBrowsing: "resource://gre/modules/SafeBrowsing.jsm",
@@ -28,10 +28,10 @@ diff -r 164a57c0cdf0 browser/components/BrowserGlue.jsm
      Services.obs.notifyObservers(null, "browser-ui-startup-complete");
    },
  
-diff -r 164a57c0cdf0 browser/base/content/browser.xul
---- a/browser/base/content/browser.xul	Thu Mar 14 19:46:30 2019 +0200
-+++ b/browser/base/content/browser.xul  Tue May 21 21:41:05 2019 +0000
-@@ -544,7 +544,6 @@
+diff -r 164a57c0cdf0 browser/base/content/browser.xhtml
+--- a/browser/base/content/browser.xhtml       2019-09-04 00:27:34.906393957 +0000
++++ b/browser/base/content/browser.xhtml       2019-09-04 00:28:26.989106989 +0000
+@@ -529,7 +529,6 @@
             noautofocus="true"
             pinTab-title="&pinTab.label;"
             unpinTab-title="&unpinTab.label;"
@@ -39,7 +39,7 @@ diff -r 164a57c0cdf0 browser/base/content/browser.xul
             copyURL-title="&pageAction.copyLink.label;"
             emailLink-title="&emailPageCmd.label;"
             sendToDevice-notReadyTitle="&sendToDevice.syncNotReady.label;"
-@@ -1036,20 +1035,6 @@
+@@ -991,20 +990,6 @@
                         tooltiptext="&pageActionButton.tooltip;"
                         onmousedown="BrowserPageActions.mainButtonClicked(event);"
                         onkeypress="BrowserPageActions.mainButtonClicked(event);"/>
@@ -61,8 +61,8 @@ diff -r 164a57c0cdf0 browser/base/content/browser.xul
                        hidden="true"
                        class="urlbar-icon-wrapper urlbar-page-action"
 diff -r 164a57c0cdf0 browser/base/content/browser-context.inc
---- a/browser/base/content/browser-context.inc	Thu Mar 14 19:46:30 2019 +0200
-+++ b/browser/base/content/browser-context.inc	Thu Mar 21 16:32:53 2019 -0700
+--- a/browser/base/content/browser-context.inc  Thu Mar 14 19:46:30 2019 +0200
++++ b/browser/base/content/browser-context.inc  Thu Mar 21 16:32:53 2019 -0700
 @@ -90,10 +90,6 @@
                  label="&saveLinkCmd.label;"
                  accesskey="&saveLinkCmd.accesskey;"

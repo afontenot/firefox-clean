@@ -5,8 +5,8 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=68.0.1
-pkgrel=2
+pkgver=69.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -28,35 +28,15 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         0001-Use-remoting-name-for-GDK-application-names.patch
         $_pkgname.desktop firefox-symbolic.svg
 	disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff)
-sha256sums=('6037f77bdab29d79ca5e3fbd1d32f6c209e09d2066189a13dc7f7491227f5568'
+sha256sums=('413c3febdfeb69eade818824eecbdb11eaeda71de229573810afd641ba741ec5'
             'SKIP'
             'ab07ab26617ff76fce68e07c66b8aa9b96c2d3e5b5517e51a3c3eac2edd88894'
             'a9e5264257041c0b968425b5c97436ba48e8d294e1a0f02c59c35461ea245c33'
             '9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797'
-            'f68dd4cf6e9ae902daaf0c218b7ac3d0cf04c0cca68cc2c4d2f33bf8a5be2b81'
-            'd710d2409024ab8f4a174a9eb54b6dd65f6f1bf3d3dac2347fd759848864eee2'
+            'adfd7b8f0da413ba3022718e0e87e2577847d0ea4468fa18cedeeca9798a7c81'
+            '2991670cf216a648bf23f2eccd4ce46c2820925613c99b374b90296a05fdb6be'
             '5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
-
-# For telemetry and crash dump analysis to work correctly, we need to tell the
-# build system which Mercurial changeset is our source. Should not be needed
-# anymore once 69 is released:
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1338099
-_repo=https://hg.mozilla.org/releases/mozilla-release
-_tag=FIREFOX_${pkgver//./_}_RELEASE
-
-_changeset=837bbcb850cd58eb07c7f6437078d5229986967c
-_changeset_tag=FIREFOX_68_0_1_RELEASE
-
-if [[ $1 == update_hgrev ]]; then
-  _changeset=$(hg id -r $_tag --id $_repo --template '{node}')
-  sed -e "/^_changeset=/s/=.*/=$_changeset/;/^_changeset_tag=/s/=.*/=$_tag/" \
-      -i "${BASH_SOURCE[0]}"
-  exit 0
-elif [[ $_tag != $_changeset_tag ]]; then
-  error "Changeset needs update. Run: bash PKGBUILD update_hgrev"
-  exit 1
-fi
 
 prepare() {
   mkdir mozbuild
@@ -114,21 +94,23 @@ ac_add_options --enable-startup-notification
 ac_add_options --enable-crashreporter
 ac_add_options --disable-gconf
 ac_add_options --disable-updater
+ac_add_options --disable-tests
 END
 }
 
 build() {
   cd firefox-$pkgver
 
-  export MOZ_SOURCE_REPO="$_repo"
-  export MOZ_SOURCE_CHANGESET="$_changeset"
   export MOZ_NOSPAM=1
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
 
   # LTO needs more open files
   ulimit -n 4096
 
+  msg2 "Building optimized browser..."
   xvfb-run -a -n 97 -s "-screen 0 1600x1200x24" ./mach build
+
+  msg2 "Building symbol archive..."
   ./mach buildsymbols
 }
 
