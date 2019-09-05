@@ -1,7 +1,7 @@
 pkgbase = firefox-clean
 	pkgdesc = Standalone web browser from mozilla.org, with defaults for more privacy
-	pkgver = 68.0.1
-	pkgrel = 2
+	pkgver = 69.0
+	pkgrel = 1
 	url = https://www.mozilla.org/firefox/
 	arch = x86_64
 	license = MPL
@@ -42,13 +42,13 @@ pkgbase = firefox-clean
 	optdepends = pulseaudio: Audio support
 	optdepends = speech-dispatcher: Text-to-Speech
 	optdepends = hunspell-en_US: Spell checking, American English
-	provides = firefox=68.0.1
+	provides = firefox=69.0
 	conflicts = firefox
 	options = !emptydirs
 	options = !makeflags
 	options = !strip
-	source = https://archive.mozilla.org/pub/firefox/releases/68.0.1/source/firefox-68.0.1.source.tar.xz
-	source = https://archive.mozilla.org/pub/firefox/releases/68.0.1/source/firefox-68.0.1.source.tar.xz.asc
+	source = https://archive.mozilla.org/pub/firefox/releases/69.0/source/firefox-69.0.source.tar.xz
+	source = https://archive.mozilla.org/pub/firefox/releases/69.0/source/firefox-69.0.source.tar.xz.asc
 	source = 0001-Use-remoting-name-for-GDK-application-names.patch
 	source = firefox.desktop
 	source = firefox-symbolic.svg
@@ -56,13 +56,13 @@ pkgbase = firefox-clean
 	source = disable-newtab-ads.diff
 	source = add-restart.diff
 	validpgpkeys = 14F26682D0916CDD81E37B6D61B7B526D98F0353
-	sha256sums = 6037f77bdab29d79ca5e3fbd1d32f6c209e09d2066189a13dc7f7491227f5568
+	sha256sums = 413c3febdfeb69eade818824eecbdb11eaeda71de229573810afd641ba741ec5
 	sha256sums = SKIP
 	sha256sums = ab07ab26617ff76fce68e07c66b8aa9b96c2d3e5b5517e51a3c3eac2edd88894
 	sha256sums = a9e5264257041c0b968425b5c97436ba48e8d294e1a0f02c59c35461ea245c33
 	sha256sums = 9a1a572dc88014882d54ba2d3079a1cf5b28fa03c5976ed2cb763c93dabbd797
-	sha256sums = f68dd4cf6e9ae902daaf0c218b7ac3d0cf04c0cca68cc2c4d2f33bf8a5be2b81
-	sha256sums = d710d2409024ab8f4a174a9eb54b6dd65f6f1bf3d3dac2347fd759848864eee2
+	sha256sums = adfd7b8f0da413ba3022718e0e87e2577847d0ea4468fa18cedeeca9798a7c81
+	sha256sums = 2991670cf216a648bf23f2eccd4ce46c2820925613c99b374b90296a05fdb6be
 	sha256sums = 5408e978b2873cac06a6c9e9f6b6bcecab3628882a41ea996e9ea5dfe2857634
 
 pkgname = firefox-clean
