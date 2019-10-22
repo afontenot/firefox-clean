@@ -1,17 +1,16 @@
-diff -r 84219fbf133c browser/base/content/browser-menubar.inc
---- a/browser/base/content/browser-menubar.inc  Wed Oct 17 18:50:12 2018 +0000
-+++ b/browser/base/content/browser-menubar.inc  Tue Oct 23 18:32:58 2018 -0700
-@@ -90,6 +90,10 @@
-                           accesskey="&goOfflineCmd.accesskey;"
+--- a/browser/base/content/browser-menubar.inc.orig       2019-10-22 00:25:42.885043896 +0000
++++ b/browser/base/content/browser-menubar.inc    2019-10-22 00:28:41.502321848 +0000
+@@ -66,6 +66,10 @@
+                 <menuitem id="goOfflineMenuitem"
                            type="checkbox"
-                           command="cmd_toggleOfflineStatus"/>
+                           command="cmd_toggleOfflineStatus" data-l10n-id="menu-file-go-offline"/>
 +                <menuitem id="menu_restart"
 +                          label="&menu_restart.label;"
 +                          accesskey="&menu_restart.accesskey;"
-+                          command="cmd_restart"/>
++                          command="cmd_restart"/>              
+ <!-- We need to leave those strings in DTD until bug 1568133 is fixed. -->
                  <menuitem id="menu_FileQuitItem"
  #ifdef XP_WIN
-                           label="&quitApplicationCmdWin2.label;"
 diff -r 84219fbf133c browser/base/content/browser-sets.inc
 --- a/browser/base/content/browser-sets.inc     Wed Oct 17 18:50:12 2018 +0000
 +++ b/browser/base/content/browser-sets.inc     Tue Oct 23 18:42:49 2018 -0700
