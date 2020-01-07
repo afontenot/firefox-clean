@@ -1,5 +1,5 @@
---- a/browser/components/newtab/lib/ActivityStream.jsm.orig	2019-10-16 21:19:58.000000000 +0000
-+++ b/browser/components/newtab/lib/ActivityStream.jsm	2019-10-22 00:17:42.308118690 +0000
+--- a/browser/components/newtab/lib/ActivityStream.jsm.orig     2020-01-03 18:57:44.000000000 +0000
++++ b/browser/components/newtab/lib/ActivityStream.jsm  2020-01-06 19:51:54.399944002 +0000
 @@ -58,11 +58,6 @@
  );
  ChromeUtils.defineModuleGetter(
@@ -183,16 +183,35 @@
        value_local_dev: false,
      },
    ],
-@@ -294,7 +175,7 @@
+@@ -294,26 +175,11 @@
      "telemetry.ut.events",
      {
        title: "Enable Unified Telemetry event data collection",
 -      value: AppConstants.EARLY_BETA_OR_EARLIER,
+-      value_local_dev: false,
+-    },
+-  ],
+-  [
+-    "telemetry.structuredIngestion",
+-    {
+-      title: "Enable Structured Ingestion Telemetry data collection",
+-      value: true,
 +      value: false,
        value_local_dev: false,
      },
    ],
-@@ -341,7 +222,7 @@
+   [
+-    "telemetry.structuredIngestion.endpoint",
+-    {
+-      title: "Structured Ingestion telemetry server endpoint",
+-      value: "https://incoming.telemetry.mozilla.org/submit",
+-    },
+-  ],
+-  [
+     "section.highlights.includeVisited",
+     {
+       title:
+@@ -334,7 +200,7 @@
      {
        title:
          "Boolean flag that decides whether or not to show saved Pocket stories in highlights.",
@@ -201,7 +220,7 @@
      },
    ],
    [
-@@ -370,7 +251,7 @@
+@@ -363,7 +229,7 @@
      "sectionOrder",
      {
        title: "The rendering order for the sections",
@@ -210,21 +229,30 @@
      },
    ],
    [
-@@ -461,77 +342,6 @@
+@@ -454,86 +320,6 @@
        }),
      },
    ],
 -  // See browser/app/profile/firefox.js for other ASR preferences. They must be defined there to enable roll-outs.
+-  [
+-    "discoverystream.flight.blocks",
+-    {
+-      title: "Track flight blocks",
+-      skipBroadcast: true,
+-      value: "{}",
+-    },
+-  ],
 -  [
 -    "discoverystream.config",
 -    {
 -      title: "Configuration for the new pocket new tab",
 -      getValue: ({ geo, locale }) => {
 -        // PLEASE NOTE:
--        // hardcoded_layout in `lib/DiscoveryStreamFeed.jsm` only works for en-* and requires refactoring for non english locales
+-        // hardcoded_layout in `lib/DiscoveryStreamFeed.jsm` only works for en-* and DE and requires refactoring for other locales
 -        const dsEnablementMatrix = {
 -          US: ["en-CA", "en-GB", "en-US"],
 -          CA: ["en-CA", "en-GB", "en-US"],
+-          DE: ["de", "de-DE", "de-AT", "de-CH"],
 -        };
 -
 -        // Verify that the current geo & locale combination is enabled
@@ -237,7 +265,7 @@
 -          enabled: isEnabled,
 -          show_spocs: showSpocs({ geo }),
 -          hardcoded_layout: true,
--          personalized: false,
+-          personalized: true,
 -          // This is currently an exmple layout used for dev purposes.
 -          layout_endpoint:
 -            "https://getpocket.cdn.mozilla.net/v3/newtab/layout?version=1&consumer_key=$apiKey&layout_variant=basic",
@@ -288,7 +316,7 @@
  ]);
  
  // Array of each feed's FEEDS_CONFIG factory and values to add to PREFS_CONFIG
-@@ -570,23 +380,7 @@
+@@ -572,23 +358,7 @@
      name: "section.highlights",
      factory: () => new HighlightsFeed(),
      title: "Fetches content recommendations from places db",
@@ -313,7 +341,7 @@
    },
    {
      name: "systemtick",
-@@ -598,7 +392,7 @@
+@@ -600,7 +370,7 @@
      name: "telemetry",
      factory: () => new TelemetryFeed(),
      title: "Relays telemetry-related actions to PingCentre",
@@ -322,7 +350,7 @@
    },
    {
      name: "favicon",
-@@ -618,12 +412,6 @@
+@@ -620,12 +390,6 @@
      title: "Handles AS Router messages, such as snippets and onboaridng",
      value: true,
    },
@@ -335,3 +363,4 @@
  ];
  
  const FEEDS_CONFIG = new Map();
+
