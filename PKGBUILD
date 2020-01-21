@@ -5,7 +5,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=72.0
+pkgver=72.0.2
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -27,7 +27,7 @@ provides=("firefox=$pkgver")
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         0001-Use-remoting-name-for-GDK-application-names.patch
         $_pkgname.desktop disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff)
-sha256sums=('6473b2d854828b5d3dbe4b01093e8993141de7707d5d01eb32bd16a469b46708'
+sha256sums=('77fd224bea885172d757aef587ad443f2171aa84e4297bca55df91a1951be389'
             'SKIP'
             '5f7ac724a5c5afd9322b1e59006f4170ea5354ca1e0e60dab08b7784c2d8463c'
             'a9e5264257041c0b968425b5c97436ba48e8d294e1a0f02c59c35461ea245c33'
@@ -109,13 +109,13 @@ build() {
   CXXFLAGS="${CXXFLAGS/-fno-plt/}"
 
   # Do 3-tier PGO
-  msg2 "Building instrumented browser..."
+  echo "Building instrumented browser..."
   cat >.mozconfig ../mozconfig - <<END
 ac_add_options --enable-profile-generate=cross
 END
   ./mach build
 
-  msg2 "Profiling instrumented browser..."
+  echo "Profiling instrumented browser..."
   ./mach package
   LLVM_PROFDATA=llvm-profdata \
     JARLOG_FILE="$PWD/jarlog" \
@@ -123,19 +123,19 @@ END
     ./mach python build/pgo/profileserver.py
 
   if [[ ! -s merged.profdata ]]; then
-    error "No profile data produced."
+    echo "No profile data produced."
     return 1
   fi
 
   if [[ ! -s jarlog ]]; then
-    error "No jar log produced."
+    echo "No jar log produced."
     return 1
   fi
 
-  msg2 "Removing instrumented browser..."
+  echo "Removing instrumented browser..."
   ./mach clobber
 
-  msg2 "Building optimized browser..."
+  echo "Building optimized browser..."
   cat >.mozconfig ../mozconfig - <<END
 ac_add_options --enable-lto=cross
 ac_add_options --enable-profile-use=cross
@@ -144,7 +144,7 @@ ac_add_options --with-pgo-jarlog=${PWD@Q}/jarlog
 END
   ./mach build
 
-  msg2 "Building symbol archive..."
+  echo "Building symbol archive..."
   ./mach buildsymbols
 }
 
@@ -248,14 +248,14 @@ END
   local i theme=official
   for i in 16 22 24 32 48 64 128 256; do
     install -Dvm644 browser/branding/$theme/default$i.png \
-      "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/$pkgname.png"
+      "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/$_pkgname.png"
   done
   install -Dvm644 browser/branding/$theme/content/about-logo.png \
-    "$pkgdir/usr/share/icons/hicolor/192x192/apps/$pkgname.png"
+    "$pkgdir/usr/share/icons/hicolor/192x192/apps/$_pkgname.png"
   install -Dvm644 browser/branding/$theme/content/about-logo@2x.png \
-    "$pkgdir/usr/share/icons/hicolor/384x384/apps/$pkgname.png"
+    "$pkgdir/usr/share/icons/hicolor/384x384/apps/$_pkgname.png"
   install -Dvm644 browser/branding/$theme/content/identity-icons-brand.svg \
-    "$pkgdir/usr/share/icons/hicolor/symbolic/apps/$pkgname-symbolic.svg"
+    "$pkgdir/usr/share/icons/hicolor/symbolic/apps/$_pkgname-symbolic.svg"
 
   install -Dvm644 ../$_pkgname.desktop \
     "$pkgdir/usr/share/applications/$_pkgname.desktop"
