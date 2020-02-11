@@ -60,27 +60,25 @@ diff -r 164a57c0cdf0 browser/base/content/browser.xhtml
                  <hbox id="star-button-box"
                        hidden="true"
                        class="urlbar-icon-wrapper urlbar-page-action"
-diff -r 164a57c0cdf0 browser/base/content/browser-context.inc
---- a/browser/base/content/browser-context.inc  Thu Mar 14 19:46:30 2019 +0200
-+++ b/browser/base/content/browser-context.inc  Thu Mar 21 16:32:53 2019 -0700
-@@ -90,10 +90,6 @@
-                 label="&saveLinkCmd.label;"
-                 accesskey="&saveLinkCmd.accesskey;"
+diff -u browser/base/content/browser-context.inc.orig browser/base/content/browser-context.inc
+--- a/browser/base/content/browser-context.inc.orig       2020-02-11 05:01:03.762178005 +0000
++++ b/browser/base/content/browser-context.inc    2020-02-11 05:18:24.730521197 +0000
+@@ -76,9 +76,6 @@
+       <menuitem id="context-savelink"
+                 data-l10n-id="main-context-menu-save-link"
                  oncommand="gContextMenu.saveLink();"/>
 -      <menuitem id="context-savelinktopocket"
--                label="&saveLinkToPocketCmd.label;"
--                accesskey="&saveLinkToPocketCmd.accesskey;"
+-                data-l10n-id="main-context-menu-save-link-to-pocket"
 -                oncommand= "Pocket.savePage(gContextMenu.browser, gContextMenu.linkURL);"/>
        <menuitem id="context-copyemail"
-                 label="&copyEmailCmd.label;"
-                 accesskey="&copyEmailCmd.accesskey;"
-@@ -263,10 +259,6 @@
-                 label="&savePageCmd.label;"
-                 accesskey="&savePageCmd.accesskey2;"
+                 data-l10n-id="main-context-menu-copy-email"
+                 oncommand="gContextMenu.copyEmail();"/>
+@@ -216,9 +213,6 @@
+       <menuitem id="context-savepage"
+                 data-l10n-id="main-context-menu-page-save"
                  oncommand="gContextMenu.savePageAs();"/>
 -      <menuitem id="context-pocket"
--                label="&saveToPocketCmd.label;"
--                accesskey="&saveToPocketCmd.accesskey;"
+-                data-l10n-id="main-context-menu-save-to-pocket"
 -                oncommand="Pocket.savePage(gContextMenu.browser, gContextMenu.browser.currentURI.spec, gContextMenu.browser.contentTitle);"/>
        <menuseparator id="context-sep-sendpagetodevice" class="sync-ui-item"
                       hidden="true"/>
