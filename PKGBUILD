@@ -5,7 +5,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=72.0.2
+pkgver=73.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -27,12 +27,12 @@ provides=("firefox=$pkgver")
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         0001-Use-remoting-name-for-GDK-application-names.patch
         $_pkgname.desktop disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff)
-sha256sums=('77fd224bea885172d757aef587ad443f2171aa84e4297bca55df91a1951be389'
+sha256sums=('b57af802aae32d7f4624ce8b373701236b76904abcb893ded9e0cb5805ba6e17'
             'SKIP'
             '5f7ac724a5c5afd9322b1e59006f4170ea5354ca1e0e60dab08b7784c2d8463c'
             'a9e5264257041c0b968425b5c97436ba48e8d294e1a0f02c59c35461ea245c33'
-            'adfd7b8f0da413ba3022718e0e87e2577847d0ea4468fa18cedeeca9798a7c81'
-            'e4f3114b8b65281c9d7868bc03921702cebad1939a7236a7c6cc5af4fcaf43ca'
+            '15b8c1ee6fe296980d3a1180aac4ab67e1e8584bc91d26d9a3802b3f56095ca7'
+            '4b7f8be700abee0c6c10dff1c8198ffa2358a011b79944f38cf5be87ae97da35'
             'dafb110a56fe362672755601e05653a55e186a34b0d8915bbc90fa603cc6e5e2')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
