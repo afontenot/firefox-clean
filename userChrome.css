@@ -1,0 +1,28 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+/* hide tabs and sidebar header (for TreeStyleTab) */
+#TabsToolbar, #sidebar-header {
+    visibility: collapse !important;
+}
+/* Remove white flash on new tab (no longer needed?)
+#browser vbox#appcontent tabbrowser,
+#content,
+#tabbrowser-tabpanels,
+browser[type=content-primary],
+browser[type=content] > html {
+  background: var(--in-content-page-background)!important
+} */
+
+/* hide page actions (captures tab stop, and pointless) */
+#pageActionButton {
+    display: none !important;
+}
+
+/* hide menu button and spacer (the menu bar is the superior UI) */
+#PanelUI-menu-button {
+    display: none !important;
+}
+#PanelUI-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}

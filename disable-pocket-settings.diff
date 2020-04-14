@@ -1,0 +1,55 @@
+--- a/browser/components/newtab/lib/AboutPreferences.jsm.orig	2020-04-13 08:16:38.946331399 +0000
++++ b/browser/components/newtab/lib/AboutPreferences.jsm	2020-04-13 08:18:37.277007699 +0000
+@@ -98,7 +98,6 @@
+     this.renderPreferences(window, [
+       ...PREFS_BEFORE_SECTIONS,
+       ...sections,
+-      ...PREFS_AFTER_SECTIONS,
+     ]);
+   }
+ 
+@@ -157,6 +156,11 @@
+       const { feed: name, titleString = {}, descString, nestedPrefs = [] } =
+         prefData || {};
+ 
++      // Remove topstories section entirely
++      if (id === "topstories") {
++        return;
++      }
++
+       // Don't show any sections that we don't want to expose in preferences UI
+       if (shouldHidePref) {
+         return;
+@@ -181,19 +185,6 @@
+ 
+       linkPref(checkbox, name, "bool");
+ 
+-      // Specially add a link for stories
+-      if (id === "topstories") {
+-        const sponsoredHbox = createAppend("hbox", sectionVbox);
+-        sponsoredHbox.setAttribute("align", "center");
+-        sponsoredHbox.appendChild(checkbox);
+-        checkbox.classList.add("tail-with-learn-more");
+-
+-        const link = createAppend("label", sponsoredHbox, { is: "text-link" });
+-        link.classList.add("learn-sponsored");
+-        link.setAttribute("href", sectionData.pref.learnMore.link.href);
+-        document.l10n.setAttributes(link, sectionData.pref.learnMore.link.id);
+-      }
+-
+       // Add more details for the section (e.g., description, more prefs)
+       const detailVbox = createAppend("vbox", sectionVbox);
+       detailVbox.classList.add("indent");
+--- a/browser/components/newtab/lib/SectionsManager.jsm.orig	2020-04-14 00:14:30.039203215 +0000
++++ b/browser/components/newtab/lib/SectionsManager.jsm	2020-04-14 00:16:36.379323912 +0000
+@@ -105,10 +105,6 @@
+           name: "section.highlights.includeDownloads",
+           titleString: "home-prefs-highlights-option-most-recent-download",
+         },
+-        {
+-          name: "section.highlights.includePocket",
+-          titleString: "home-prefs-highlights-option-saved-to-pocket",
+-        },
+       ],
+     },
+     shouldHidePref: false,

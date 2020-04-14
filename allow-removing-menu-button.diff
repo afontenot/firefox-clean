@@ -1,0 +1,11 @@
+--- a/browser/base/content/browser.xhtml.orig	2020-04-03 19:34:29.000000000 +0000
++++ b/browser/base/content/browser.xhtml	2020-04-08 06:54:04.082311372 +0000
+@@ -1123,7 +1108,7 @@
+       </toolbarbutton>
+ 
+       <toolbaritem id="PanelUI-button"
+-                   removable="false">
++                   removable="true">
+         <toolbarbutton id="whats-new-menu-button"
+                        class="toolbarbutton-1"
+                        hidden="true"
