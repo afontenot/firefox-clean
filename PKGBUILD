@@ -6,7 +6,7 @@
 pkgname=firefox-clean
 _pkgname=firefox
 pkgver=75.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -26,39 +26,34 @@ conflicts=('firefox')
 provides=("firefox=$pkgver")
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         0001-Use-remoting-name-for-GDK-application-names.patch
-        $_pkgname.desktop disable-bad-addons.diff disable-newtab-ads.diff add-restart.diff
-	allow-removing-menu-button.diff disable-pocket-settings.diff
-        fix-mozbuild-py.diff)
+        $_pkgname.desktop disable-pocket-addon.diff disable-discoverystream.diff 
+        add-restart.diff allow-removing-menu-button.diff fix-mozbuild-py.diff)
 sha256sums=('bbb1054d8f2717c634480556d3753a8483986af7360e023bb6232df80b746b0f'
             'SKIP'
             '5f7ac724a5c5afd9322b1e59006f4170ea5354ca1e0e60dab08b7784c2d8463c'
             'a9e5264257041c0b968425b5c97436ba48e8d294e1a0f02c59c35461ea245c33'
             '15b8c1ee6fe296980d3a1180aac4ab67e1e8584bc91d26d9a3802b3f56095ca7'
-            '501d112f7309ccf469d8547d6feb14332b3780e71b06ce8e69a259f527687d03'
+            'e5c11fef69958888cca47676e9108a5743721c6d79d015398cca2fe1a9b2c6ab'
             'dafb110a56fe362672755601e05653a55e186a34b0d8915bbc90fa603cc6e5e2'
             'f53cac8cb4885758a446a7c9ed9d951a524524df5147594b50469fc1749368cc'
-            '5398c04f3521a35425dcb19aae15b5031bd3d09d6bb3ff9bc2bce578cd22c16d'
             'f6cc080fe4d967279e1edb408e3998220663a768b522102c60a80e6f88cade2d')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
 prepare() {
-  mkdir mozbuild
+  mkdir -p mozbuild
   cd firefox-$pkgver
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   patch -Np1 -i ../0001-Use-remoting-name-for-GDK-application-names.patch
 
   # Disable anti-features
-  patch -Np1 -i ../disable-bad-addons.diff
+  patch -Np1 -i ../disable-pocket-addon.diff
   
   # Disable junk on the new tab page
-  patch -Np1 -i ../disable-newtab-ads.diff
+  patch -Np1 -i ../disable-discoverystream.diff
 
   # Add restart to file menu
   patch -Np1 -i ../add-restart.diff
-
-  # Remove pocket from configuration page
-  patch -Np1 -i ../disable-pocket-settings.diff
 
   # Allow user to remove menu button
   # Work in progress, not finished
