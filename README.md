@@ -14,10 +14,10 @@ Changes
 
  Don't trust me! Diff this source tree with the original Archlinux package here: [https://git.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/firefox](https://git.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/firefox)
 
-# userChrome.css
+## userChrome.css
 
 I've included my userChrome.css that includes several other changes I think are worthwhile. These are *not* part of the firefox-clean patch set, and won't be built into your browser. A future goal of this project is to (re-)enable desirable configurability to Firefox, and features that currently require userChrome.css are a good starting place.
 
-# Other Projects
+## Other Projects
 
 If you're not an Arch Linux user, consider using this project to create a custom Firefox profile that disables many anti-user features: [https://github.com/allo-/firefox-profilemaker](https://github.com/allo-/firefox-profilemaker).
