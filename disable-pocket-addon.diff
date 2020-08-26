@@ -9,29 +9,30 @@ diff -r 8337ebb86a42 browser/components/moz.build
      'preferences',
      'privatebrowsing',
      'resistfingerprinting',
-diff -r 164a57c0cdf0 browser/components/BrowserGlue.jsm
---- a/browser/components/BrowserGlue.jsm        Thu Mar 14 19:46:30 2019 +0200
-+++ b/browser/components/BrowserGlue.jsm        Thu Mar 21 16:29:36 2019 -0700
-@@ -426,7 +426,6 @@
-   RemoteSettings: "resource://services-settings/remote-settings.js",
+diff -u browser/components/BrowserGlue.jsm.orig browser/components/BrowserGlue.jsm
+--- a/browser/components/BrowserGlue.jsm.orig     2020-06-03 01:04:50.000000000 +0000
++++ b/browser/components/BrowserGlue.jsm  2020-06-04 03:43:49.379828932 +0000
+@@ -681,7 +681,6 @@
+   RFPHelper: "resource://gre/modules/RFPHelper.jsm",
    SafeBrowsing: "resource://gre/modules/SafeBrowsing.jsm",
    Sanitizer: "resource:///modules/Sanitizer.jsm",
 -  SaveToPocket: "chrome://pocket/content/SaveToPocket.jsm",
    SearchTelemetry: "resource:///modules/SearchTelemetry.jsm",
    SessionStartup: "resource:///modules/sessionstore/SessionStartup.jsm",
    SessionStore: "resource:///modules/sessionstore/SessionStore.jsm",
-@@ -1081,7 +1080,6 @@
- 
-     Normandy.init();
+@@ -1309,8 +1308,6 @@
+       Normandy.init();
+     }
  
 -    SaveToPocket.init();
-     Services.obs.notifyObservers(null, "browser-ui-startup-complete");
-   },
+-
+     AboutHomeStartupCache.init();
  
+     Services.obs.notifyObservers(null, "browser-ui-startup-complete"); 
 diff -r 164a57c0cdf0 browser/base/content/browser.xhtml
---- a/browser/base/content/browser.xhtml       2019-09-04 00:27:34.906393957 +0000
-+++ b/browser/base/content/browser.xhtml       2019-09-04 00:28:26.989106989 +0000
-@@ -529,7 +529,6 @@
+--- a/browser/base/content/browser.xhtml.orig     2020-06-25 18:13:44.000000000 +0000
++++ b/browser/base/content/browser.xhtml  2020-06-30 08:10:42.848814387 +0000
+@@ -535,7 +535,6 @@
             noautofocus="true"
             pinTab-title="&pinTab.label;"
             unpinTab-title="&unpinTab.label;"
@@ -39,24 +40,16 @@ diff -r 164a57c0cdf0 browser/base/content/browser.xhtml
             copyURL-title="&pageAction.copyLink.label;"
             emailLink-title="&emailPageCmd.label;"
             sendToDevice-notReadyTitle="&sendToDevice.syncNotReady.label;"
-@@ -991,20 +990,6 @@
-                        tooltiptext="&pageActionButton.tooltip;"
+@@ -1069,12 +1068,6 @@
+                        data-l10n-id="urlbar-page-action-button"
                         onmousedown="BrowserPageActions.mainButtonClicked(event);"
                         onkeypress="BrowserPageActions.mainButtonClicked(event);"/>
--                <hbox id="pocket-button-box"
--                      hidden="true"
--                      class="urlbar-icon-wrapper urlbar-page-action"
--                      onclick="BrowserPageActions.doCommandForAction(PageActions.actionForID('pocket'), event, this);">
--                  <image id="pocket-button"
--                         class="urlbar-icon"
--                         tooltiptext="&pocketButton.tooltiptext;"
--                         role="button"/>
--                  <hbox id="pocket-button-animatable-box">
--                    <image id="pocket-button-animatable-image"
--                           tooltiptext="&pocketButton.tooltiptext;"
--                           role="presentation"/>
--                  </hbox>
--                </hbox>
+-                <image id="pocket-button"
+-                       class="urlbar-icon urlbar-page-action"
+-                       data-l10n-id="urlbar-pocket-button"
+-                       role="button"
+-                       hidden="true"
+-                       onclick="BrowserPageActions.doCommandForAction(PageActions.actionForID('pocket'), event, this);"/>
                  <hbox id="star-button-box"
                        hidden="true"
                        class="urlbar-icon-wrapper urlbar-page-action"

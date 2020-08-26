@@ -1,21 +1,20 @@
 # Maintainer: afontenot <adam.m.fontenot@gmail.com>
-# Contributor: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
+# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 # Contributor: Jakub Schmidtke <sjakub@gmail.com>
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=75.0
-pkgrel=2
+pkgver=80.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
-depends=(gtk3 libxt startup-notification mime-types dbus-glib ffmpeg nss
-         ttf-font libpulse)
-makedepends=(unzip zip diffutils python2-setuptools yasm mesa imake inetutils
-             xorg-server-xvfb autoconf2.13 rust clang llvm jack gtk2 python
-             nodejs python2-psutil cbindgen nasm)
+depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
+makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
+             autoconf2.13 rust clang llvm jack gtk2 nodejs cbindgen nasm
+             python-setuptools python-psutil lld)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -27,16 +26,15 @@ provides=("firefox=$pkgver")
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         0001-Use-remoting-name-for-GDK-application-names.patch
         $_pkgname.desktop disable-pocket-addon.diff disable-discoverystream.diff 
-        add-restart.diff allow-removing-menu-button.diff fix-mozbuild-py.diff)
-sha256sums=('bbb1054d8f2717c634480556d3753a8483986af7360e023bb6232df80b746b0f'
+        add-restart.diff allow-removing-menu-button.diff)
+sha256sums=('380d9853e0712442ba2d4acd85c0e09c19ad36561a3ea8932705ad6b8a91146a'
             'SKIP'
-            '5f7ac724a5c5afd9322b1e59006f4170ea5354ca1e0e60dab08b7784c2d8463c'
-            'a9e5264257041c0b968425b5c97436ba48e8d294e1a0f02c59c35461ea245c33'
-            '15b8c1ee6fe296980d3a1180aac4ab67e1e8584bc91d26d9a3802b3f56095ca7'
-            'e5c11fef69958888cca47676e9108a5743721c6d79d015398cca2fe1a9b2c6ab'
+            '3bb7463471fb43b2163a705a79a13a3003d70fff4bbe44f467807ca056de9a75'
+            '298eae9de76ec53182f38d5c549d0379569916eebf62149f9d7f4a7edef36abf'
+            '026bdc0ccc08c2e455d7fd582a7702d557986faf727a0f146d424d8c7cd8b0ea'
+            '78d57bbd330fd50817eb97ceb2e34f6ecf8de69f6d9878203d1a1714e9e45750'
             'dafb110a56fe362672755601e05653a55e186a34b0d8915bbc90fa603cc6e5e2'
-            'f53cac8cb4885758a446a7c9ed9d951a524524df5147594b50469fc1749368cc'
-            'f6cc080fe4d967279e1edb408e3998220663a768b522102c60a80e6f88cade2d')
+            'f53cac8cb4885758a446a7c9ed9d951a524524df5147594b50469fc1749368cc')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
 prepare() {
@@ -59,21 +57,21 @@ prepare() {
   # Work in progress, not finished
   # patch -Np1 -i ../allow-removing-menu-button.diff
 
-  # Weird python2 error, why aren't they seeing this with official build?
-  patch -Np1 -i ../fix-mozbuild-py.diff
-
   # I recommend we take off and nuke the site from orbit.
   # It's the only way to be sure.
   rm -r browser/components/pocket
 
   cat >../mozconfig <<END
 ac_add_options --enable-application=browser
+mk_add_options MOZ_OBJDIR=${PWD@Q}/obj
 
 ac_add_options --prefix=/usr
 ac_add_options --enable-release
 ac_add_options --enable-hardening
 ac_add_options --enable-optimize
 ac_add_options --enable-rust-simd
+ac_add_options --enable-linker=lld
+ac_add_options --disable-elf-hack
 export CC='clang --target=x86_64-unknown-linux-gnu'
 export CXX='clang++ --target=x86_64-unknown-linux-gnu'
 export AR=llvm-ar
@@ -97,9 +95,7 @@ ac_add_options --with-system-nss
 # Features
 ac_add_options --enable-alsa
 ac_add_options --enable-jack
-ac_add_options --enable-startup-notification
 ac_add_options --enable-crashreporter
-ac_add_options --disable-gconf
 ac_add_options --disable-updater
 ac_add_options --disable-tests
 END
@@ -113,11 +109,6 @@ build() {
 
   # LTO needs more open files
   ulimit -n 4096
-
-  # -fno-plt with cross-LTO causes obscure LLVM errors
-  # LLVM ERROR: Function Import: link error
-  CFLAGS="${CFLAGS/-fno-plt/}"
-  CXXFLAGS="${CXXFLAGS/-fno-plt/}"
 
   # Do 3-tier PGO
   echo "Building instrumented browser..."
@@ -133,15 +124,11 @@ END
     xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
     ./mach python build/pgo/profileserver.py
 
-  if [[ ! -s merged.profdata ]]; then
-    echo "No profile data produced."
-    return 1
-  fi
+  stat -c "Profile data found (%s bytes)" merged.profdata
+  test -s merged.profdata
 
-  if [[ ! -s jarlog ]]; then
-    echo "No jar log produced."
-    return 1
-  fi
+  stat -c "Jar log found (%s bytes)" jarlog
+  test -s jarlog
 
   echo "Removing instrumented browser..."
   ./mach clobber
