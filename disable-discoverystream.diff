@@ -1,6 +1,6 @@
---- a/browser/components/newtab/lib/ActivityStream.jsm.orig       2020-07-20 22:49:36.000000000 +0000
-+++ b/browser/components/newtab/lib/ActivityStream.jsm    2020-07-29 22:26:23.814353841 +0000
-@@ -146,10 +146,7 @@
+--- a/browser/components/newtab/lib/ActivityStream.jsm.orig       2020-09-17 00:32:42.000000000 +0000
++++ b/browser/components/newtab/lib/ActivityStream.jsm    2020-09-23 01:06:35.623498170 +0000
+@@ -120,10 +120,7 @@
  
  // Determine if spocs should be shown for a geo/locale
  function showSpocs({ geo }) {
@@ -12,7 +12,7 @@
  }
  
  // Configure default Activity Stream prefs with a plain `value` or a `getValue`
-@@ -176,15 +173,10 @@
+@@ -150,15 +147,10 @@
            hidden: !PREFS_CONFIG.get("feeds.system.topstories").getValue(args),
            provider_icon: "pocket",
            provider_name: "Pocket",
@@ -32,7 +32,7 @@
            model_keys: [
              "nmf_model_animals",
              "nmf_model_business",
-@@ -244,7 +236,7 @@
+@@ -218,7 +210,7 @@
              "nb_model_writing",
            ],
            show_spocs: showSpocs(args),
@@ -41,7 +41,7 @@
            version: 1,
          }),
      },
-@@ -261,7 +253,7 @@
+@@ -235,7 +227,7 @@
      {
        title:
          "Show sponsored cards in spoc experiment (show_spocs in topstories.options has to be set to true as well)",
@@ -50,7 +50,7 @@
      },
    ],
    [
-@@ -294,21 +286,21 @@
+@@ -268,21 +260,21 @@
      "feeds.snippets",
      {
        title: "Show snippets on activity stream",
@@ -75,7 +75,7 @@
        value_local_dev: false,
      },
    ],
-@@ -316,7 +308,7 @@
+@@ -290,7 +282,7 @@
      "telemetry.ut.events",
      {
        title: "Enable Unified Telemetry event data collection",
@@ -84,7 +84,7 @@
        value_local_dev: false,
      },
    ],
-@@ -324,7 +316,7 @@
+@@ -298,7 +290,7 @@
      "telemetry.structuredIngestion.endpoint",
      {
        title: "Structured Ingestion telemetry server endpoint",
@@ -93,7 +93,7 @@
      },
    ],
    [
-@@ -348,7 +340,7 @@
+@@ -322,7 +314,7 @@
      {
        title:
          "Boolean flag that decides whether or not to show saved Pocket stories in highlights.",
@@ -102,7 +102,7 @@
      },
    ],
    [
-@@ -377,7 +369,7 @@
+@@ -351,7 +343,7 @@
      "sectionOrder",
      {
        title: "The rendering order for the sections",
@@ -111,7 +111,7 @@
      },
    ],
    [
-@@ -394,21 +386,7 @@
+@@ -368,21 +360,7 @@
          "An ordered, comma-delimited list of search shortcuts that we should try and pin",
        // This pref is dynamic as the shortcuts vary depending on the region
        getValue: ({ geo }) => {
@@ -134,7 +134,7 @@
        },
      },
    ],
-@@ -486,13 +464,12 @@
+@@ -460,13 +438,12 @@
          return JSON.stringify({
            api_key_pref: "extensions.pocket.oAuthConsumerKey",
            collapsible: true,
@@ -150,7 +150,7 @@
          });
        },
      },
-@@ -502,7 +479,7 @@
+@@ -476,7 +453,7 @@
      {
        title:
          "Endpoint prefixes (comma-separated) that are allowed to be requested",
@@ -159,7 +159,7 @@
      },
    ],
    [
-@@ -548,7 +525,7 @@
+@@ -522,7 +499,7 @@
      {
        title:
          "Endpoint for when a user opts-out of sponsored content to delete the user's data from the ad server.",
@@ -168,13 +168,28 @@
      },
    ],
    [
-@@ -579,31 +556,7 @@
+@@ -604,49 +581,7 @@
        "System pref that fetches content recommendations from a configurable content provider",
      // Dynamically determine if Pocket should be shown for a geo / locale
      getValue: ({ geo, locale }) => {
+-      // If we don't have geo, we don't want to flash the screen with stories while geo loads.
+-      // Best to display nothing until geo is ready.
+-      if (!geo) {
+-        return false;
+-      }
+-      const preffedRegionsBlockString =
+-        Services.prefs.getStringPref(REGION_STORIES_BLOCK) || "";
 -      const preffedRegionsString =
 -        Services.prefs.getStringPref(REGION_STORIES_CONFIG) || "";
+-      const preffedLocaleListString =
+-        Services.prefs.getStringPref(LOCALE_LIST_CONFIG) || "";
+-      const preffedBlockRegions = preffedRegionsBlockString
+-        .split(",")
+-        .map(s => s.trim());
 -      const preffedRegions = preffedRegionsString.split(",").map(s => s.trim());
+-      const preffedLocales = preffedLocaleListString
+-        .split(",")
+-        .map(s => s.trim());
 -      const locales = {
 -        US: ["en-CA", "en-GB", "en-US"],
 -        CA: ["en-CA", "en-GB", "en-US"],
@@ -184,8 +199,8 @@
 -        IN: ["en-CA", "en-GB", "en-US"],
 -        IE: ["en-CA", "en-GB", "en-US"],
 -        ZA: ["en-CA", "en-GB", "en-US"],
--        CH: ["de", "fr", "it"],
--        BE: ["fr", "de"],
+-        CH: ["de"],
+-        BE: ["de"],
 -        DE: ["de"],
 -        AT: ["de"],
 -        IT: ["it"],
@@ -194,14 +209,17 @@
 -        PL: ["pl"],
 -        JP: ["ja", "ja-JP-mac"],
 -      }[geo];
--      return (
--        preffedRegions.includes(geo) && !!locales && locales.includes(locale)
--      );
+-
+-      const regionBlocked = preffedBlockRegions.includes(geo);
+-      const localeEnabled = locale && preffedLocales.includes(locale);
+-      const regionEnabled =
+-        preffedRegions.includes(geo) && !!locales && locales.includes(locale);
+-      return !regionBlocked && (localeEnabled || regionEnabled);
 +      return false;
      },
    },
    {
-@@ -651,7 +597,7 @@
+@@ -624,7 +598,7 @@
      name: "telemetry",
      factory: () => new TelemetryFeed(),
      title: "Relays telemetry-related actions to PingCentre",
@@ -210,7 +228,7 @@
    },
    {
      name: "favicon",
-@@ -675,13 +621,13 @@
+@@ -648,13 +622,13 @@
      name: "recommendationproviderswitcher",
      factory: () => new RecommendationProviderSwitcher(),
      title: "Handles switching between two types of personality providers",
@@ -225,18 +243,60 @@
 +    value: false,
    },
  ];
-  
---- a/browser/components/newtab/lib/DiscoveryStreamFeed.jsm.orig	2020-04-16 10:10:08.356610692 +0000
-+++ b/browser/components/newtab/lib/DiscoveryStreamFeed.jsm	2020-04-16 10:12:56.845856633 +0000
-@@ -1868,7 +1868,7 @@
+
+--- a/browser/components/newtab/lib/DiscoveryStreamFeed.jsm.orig  2020-09-23 00:59:15.262930617 +0000
++++ b/browser/components/newtab/lib/DiscoveryStreamFeed.jsm       2020-09-23 01:09:25.180836620 +0000
+@@ -1913,7 +1913,7 @@
+ getHardcodedLayout = isBasicLayout => ({
+   lastUpdate: Date.now(),
+   spocs: {
+-    url: "https://spocs.getpocket.com/spocs",
++    url: "",
+   },
+   layout: [
+     {
+@@ -1993,7 +1993,7 @@
            feed: {
              embed_reference: null,
              url:
--              "https://getpocket.cdn.mozilla.net/v3/firefox/global-recs?version=3&consumer_key=$apiKey&locale_lang=$locale&count=30",
+-              "https://getpocket.cdn.mozilla.net/v3/firefox/global-recs?version=3&consumer_key=$apiKey&locale_lang=$locale&region=$region&count=30",
 +              "",
            },
            spocs: {
              probability: 1,
+@@ -2018,31 +2018,6 @@
+           properties: {
+             alignment: "left-align",
+             links: [
+-              {
+-                name: "Must Reads",
+-                url: "https://getpocket.com/explore/must-reads?src=fx_new_tab",
+-              },
+-              {
+-                name: "Self Improvement",
+-                url:
+-                  "https://getpocket.com/explore/self-improvement?src=fx_new_tab",
+-              },
+-              {
+-                name: "Health",
+-                url: "https://getpocket.com/explore/health?src=fx_new_tab",
+-              },
+-              {
+-                name: "Business",
+-                url: "https://getpocket.com/explore/business?src=fx_new_tab",
+-              },
+-              {
+-                name: "Technology",
+-                url: "https://getpocket.com/explore/technology?src=fx_new_tab",
+-              },
+-              {
+-                name: "More Recommendations ›",
+-                url: "https://getpocket.com/explore?src=fx_new_tab&cdn=0",
+-              },
+             ],
+           },
+           header: {
+  
 --- a/browser/components/newtab/lib/AboutPreferences.jsm.orig   2020-04-13 08:16:38.946331399 +0000
 +++ b/browser/components/newtab/lib/AboutPreferences.jsm        2020-04-13 08:18:37.277007699 +0000
 @@ -98,7 +98,6 @@

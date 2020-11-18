@@ -5,7 +5,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=80.0
+pkgver=83.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -14,7 +14,7 @@ url="https://www.mozilla.org/firefox/"
 depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm jack gtk2 nodejs cbindgen nasm
-             python-setuptools python-psutil lld)
+             python-setuptools python-psutil python-zstandard lld)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -27,12 +27,12 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         0001-Use-remoting-name-for-GDK-application-names.patch
         $_pkgname.desktop disable-pocket-addon.diff disable-discoverystream.diff 
         add-restart.diff allow-removing-menu-button.diff)
-sha256sums=('380d9853e0712442ba2d4acd85c0e09c19ad36561a3ea8932705ad6b8a91146a'
+sha256sums=('d69e84e8b8449f828683d274c24e03095858362bfed21b08bdd7fe715eea5398'
             'SKIP'
-            '3bb7463471fb43b2163a705a79a13a3003d70fff4bbe44f467807ca056de9a75'
+            '1dba448eb1605c9dc73c22861a5394b50055909399f056baee4887b29af1b51e'
             '298eae9de76ec53182f38d5c549d0379569916eebf62149f9d7f4a7edef36abf'
-            '026bdc0ccc08c2e455d7fd582a7702d557986faf727a0f146d424d8c7cd8b0ea'
-            '78d57bbd330fd50817eb97ceb2e34f6ecf8de69f6d9878203d1a1714e9e45750'
+            '4b10b17271d766286133e682455a4152adea7fe85e3a20626afb3b6146db23a2'
+            '9c0dd2a67693164199e4069b079cd930ba605d3107040d00d7538fab91f1c26f'
             'dafb110a56fe362672755601e05653a55e186a34b0d8915bbc90fa603cc6e5e2'
             'f53cac8cb4885758a446a7c9ed9d951a524524df5147594b50469fc1749368cc')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
@@ -56,6 +56,9 @@ prepare() {
   # Allow user to remove menu button
   # Work in progress, not finished
   # patch -Np1 -i ../allow-removing-menu-button.diff
+
+  # Weird python2 error, why aren't they seeing this with official build?
+  #patch -Np1 -i ../fix-mozbuild-py.diff
 
   # I recommend we take off and nuke the site from orbit.
   # It's the only way to be sure.
@@ -106,6 +109,8 @@ build() {
 
   export MOZ_NOSPAM=1
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
+  export MOZ_ENABLE_FULL_SYMBOLS=1
+  export MACH_USE_SYSTEM_PYTHON=1
 
   # LTO needs more open files
   ulimit -n 4096
@@ -219,15 +224,6 @@ pref("security.ssl.require_safe_negotiation", true);
 pref("network.IDN_show_punycode", true);
 pref("security.certerrors.mitm.auto_enable_enterprise_roots", false);
 END
-
-# local policies="$pkgdir/usr/lib/$_pkgname/distribution/policies.json"
-#  install -Dm644 /dev/stdin "$policies" <<END
-#{
-#  "policies": {
-#    "DisablePocket": true
-#  }
-#}
-#END
 
   local i theme=official
   for i in 16 22 24 32 48 64 128 256; do

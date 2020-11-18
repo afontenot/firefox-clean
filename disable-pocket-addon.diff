@@ -32,15 +32,18 @@ diff -u browser/components/BrowserGlue.jsm.orig browser/components/BrowserGlue.j
 diff -r 164a57c0cdf0 browser/base/content/browser.xhtml
 --- a/browser/base/content/browser.xhtml.orig     2020-06-25 18:13:44.000000000 +0000
 +++ b/browser/base/content/browser.xhtml  2020-06-30 08:10:42.848814387 +0000
-@@ -535,7 +535,6 @@
-            noautofocus="true"
-            pinTab-title="&pinTab.label;"
-            unpinTab-title="&unpinTab.label;"
--           pocket-title="&saveToPocketCmd.label;"
-            copyURL-title="&pageAction.copyLink.label;"
-            emailLink-title="&emailPageCmd.label;"
-            sendToDevice-notReadyTitle="&sendToDevice.syncNotReady.label;"
-@@ -1069,12 +1068,6 @@
+@@ -1465,10 +1465,6 @@
+                        label="&bookmarksSubview.label;"
+                        closemenu="none"
+                        oncommand="BookmarkingUI.showSubView(this);"/>
+-        <toolbarbutton id="appMenu-library-pocket-button"
+-                       class="subviewbutton subviewbutton-iconic"
+-                       label="&pocketMenuitem.label;"
+-                       oncommand="Pocket.openList(event)"/>
+         <toolbarbutton id="appMenu-library-history-button"
+                        class="subviewbutton subviewbutton-iconic subviewbutton-nav"
+                        label="&historyMenu.label;"
+@@ -1901,12 +1897,6 @@
                         data-l10n-id="urlbar-page-action-button"
                         onmousedown="BrowserPageActions.mainButtonClicked(event);"
                         onkeypress="BrowserPageActions.mainButtonClicked(event);"/>
