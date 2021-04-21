@@ -1,6 +1,7 @@
---- a/browser/components/newtab/lib/ActivityStream.jsm.orig       2020-09-17 00:32:42.000000000 +0000
-+++ b/browser/components/newtab/lib/ActivityStream.jsm    2020-09-23 01:06:35.623498170 +0000
-@@ -120,10 +120,7 @@
+diff -u browser/components/newtab/lib/ActivityStream.jsm.orig browser/components/newtab/lib/ActivityStream.jsm
+--- a/browser/components/newtab/lib/ActivityStream.jsm.orig       2021-04-15 23:11:47.000000000 +0000
++++ b/browser/components/newtab/lib/ActivityStream.jsm    2021-04-20 00:06:32.633397507 +0000
+@@ -117,10 +117,7 @@
  
  // Determine if spocs should be shown for a geo/locale
  function showSpocs({ geo }) {
@@ -12,7 +13,7 @@
  }
  
  // Configure default Activity Stream prefs with a plain `value` or a `getValue`
-@@ -150,15 +147,10 @@
+@@ -147,15 +144,10 @@
            hidden: !PREFS_CONFIG.get("feeds.system.topstories").getValue(args),
            provider_icon: "pocket",
            provider_name: "Pocket",
@@ -29,19 +30,10 @@
 +          stories_endpoint: "",
 +          stories_referrer: "",
 +          topics_endpoint: "",
-           model_keys: [
-             "nmf_model_animals",
-             "nmf_model_business",
-@@ -218,7 +210,7 @@
-             "nb_model_writing",
-           ],
            show_spocs: showSpocs(args),
--          personalized: true,
-+          personalized: false,
-           version: 1,
          }),
      },
-@@ -235,7 +227,7 @@
+@@ -180,7 +172,7 @@
      {
        title:
          "Show sponsored cards in spoc experiment (show_spocs in topstories.options has to be set to true as well)",
@@ -50,7 +42,7 @@
      },
    ],
    [
-@@ -268,21 +260,21 @@
+@@ -220,21 +212,21 @@
      "feeds.snippets",
      {
        title: "Show snippets on activity stream",
@@ -75,7 +67,7 @@
        value_local_dev: false,
      },
    ],
-@@ -290,7 +282,7 @@
+@@ -242,7 +234,7 @@
      "telemetry.ut.events",
      {
        title: "Enable Unified Telemetry event data collection",
@@ -84,7 +76,7 @@
        value_local_dev: false,
      },
    ],
-@@ -298,7 +290,7 @@
+@@ -250,7 +242,7 @@
      "telemetry.structuredIngestion.endpoint",
      {
        title: "Structured Ingestion telemetry server endpoint",
@@ -93,7 +85,7 @@
      },
    ],
    [
-@@ -322,7 +314,7 @@
+@@ -274,7 +266,7 @@
      {
        title:
          "Boolean flag that decides whether or not to show saved Pocket stories in highlights.",
@@ -102,7 +94,7 @@
      },
    ],
    [
-@@ -351,7 +343,7 @@
+@@ -303,7 +295,7 @@
      "sectionOrder",
      {
        title: "The rendering order for the sections",
@@ -111,7 +103,7 @@
      },
    ],
    [
-@@ -368,21 +360,7 @@
+@@ -320,21 +312,7 @@
          "An ordered, comma-delimited list of search shortcuts that we should try and pin",
        // This pref is dynamic as the shortcuts vary depending on the region
        getValue: ({ geo }) => {
@@ -134,7 +126,7 @@
        },
      },
    ],
-@@ -460,13 +438,12 @@
+@@ -397,13 +375,12 @@
          return JSON.stringify({
            api_key_pref: "extensions.pocket.oAuthConsumerKey",
            collapsible: true,
@@ -150,7 +142,7 @@
          });
        },
      },
-@@ -476,7 +453,7 @@
+@@ -413,7 +390,7 @@
      {
        title:
          "Endpoint prefixes (comma-separated) that are allowed to be requested",
@@ -159,7 +151,7 @@
      },
    ],
    [
-@@ -522,7 +499,7 @@
+@@ -466,7 +443,7 @@
      {
        title:
          "Endpoint for when a user opts-out of sponsored content to delete the user's data from the ad server.",
@@ -168,7 +160,7 @@
      },
    ],
    [
-@@ -604,49 +581,7 @@
+@@ -525,49 +502,7 @@
        "System pref that fetches content recommendations from a configurable content provider",
      // Dynamically determine if Pocket should be shown for a geo / locale
      getValue: ({ geo, locale }) => {
@@ -219,7 +211,7 @@
      },
    },
    {
-@@ -624,7 +598,7 @@
+@@ -580,7 +515,7 @@
      name: "telemetry",
      factory: () => new TelemetryFeed(),
      title: "Relays telemetry-related actions to PingCentre",
@@ -228,7 +220,7 @@
    },
    {
      name: "favicon",
-@@ -648,13 +622,13 @@
+@@ -598,13 +533,13 @@
      name: "recommendationproviderswitcher",
      factory: () => new RecommendationProviderSwitcher(),
      title: "Handles switching between two types of personality providers",
@@ -243,10 +235,11 @@
 +    value: false,
    },
  ];
-
---- a/browser/components/newtab/lib/DiscoveryStreamFeed.jsm.orig  2020-09-23 00:59:15.262930617 +0000
-+++ b/browser/components/newtab/lib/DiscoveryStreamFeed.jsm       2020-09-23 01:09:25.180836620 +0000
-@@ -1913,7 +1913,7 @@
+ 
+diff -u browser/components/newtab/lib/DiscoveryStreamFeed.jsm.orig browser/components/newtab/lib/DiscoveryStreamFeed.jsm
+--- a/browser/components/newtab/lib/DiscoveryStreamFeed.jsm.orig  2020-12-12 00:35:33.000000000 +0000
++++ b/browser/components/newtab/lib/DiscoveryStreamFeed.jsm       2020-12-16 17:10:57.009219456 +0000
+@@ -1943,7 +1943,7 @@
  getHardcodedLayout = isBasicLayout => ({
    lastUpdate: Date.now(),
    spocs: {
@@ -255,7 +248,7 @@
    },
    layout: [
      {
-@@ -1993,7 +1993,7 @@
+@@ -2023,7 +2023,7 @@
            feed: {
              embed_reference: null,
              url:
@@ -264,50 +257,53 @@
            },
            spocs: {
              probability: 1,
-@@ -2018,31 +2018,6 @@
+@@ -2048,35 +2048,6 @@
            properties: {
              alignment: "left-align",
              links: [
 -              {
--                name: "Must Reads",
--                url: "https://getpocket.com/explore/must-reads?src=fx_new_tab",
--              },
--              {
 -                name: "Self Improvement",
 -                url:
--                  "https://getpocket.com/explore/self-improvement?src=fx_new_tab",
+-                  "https://getpocket.com/explore/self-improvement?utm_source=pocket-newtab",
+-              },
+-              {
+-                name: "Food",
+-                url:
+-                  "https://getpocket.com/explore/food?utm_source=pocket-newtab",
+-              },
+-              {
+-                name: "Entertainment",
+-                url:
+-                  "https://getpocket.com/explore/entertainment?utm_source=pocket-newtab",
 -              },
 -              {
 -                name: "Health",
--                url: "https://getpocket.com/explore/health?src=fx_new_tab",
+-                url:
+-                  "https://getpocket.com/explore/health?utm_source=pocket-newtab",
 -              },
 -              {
--                name: "Business",
--                url: "https://getpocket.com/explore/business?src=fx_new_tab",
--              },
--              {
--                name: "Technology",
--                url: "https://getpocket.com/explore/technology?src=fx_new_tab",
+-                name: "Science",
+-                url:
+-                  "https://getpocket.com/explore/science?utm_source=pocket-newtab",
 -              },
 -              {
 -                name: "More Recommendations ›",
--                url: "https://getpocket.com/explore?src=fx_new_tab&cdn=0",
+-                url: "https://getpocket.com/explore?utm_source=pocket-newtab",
 -              },
              ],
            },
            header: {
-  
---- a/browser/components/newtab/lib/AboutPreferences.jsm.orig   2020-04-13 08:16:38.946331399 +0000
-+++ b/browser/components/newtab/lib/AboutPreferences.jsm        2020-04-13 08:18:37.277007699 +0000
-@@ -98,7 +98,6 @@
+--- a/browser/components/newtab/lib/AboutPreferences.jsm.orig     2021-03-18 13:48:28.000000000 +0000
++++ b/browser/components/newtab/lib/AboutPreferences.jsm  2021-04-18 02:13:56.605573190 +0000
+@@ -156,7 +156,6 @@
      this.renderPreferences(window, [
-       ...PREFS_BEFORE_SECTIONS,
+       ...PREFS_BEFORE_SECTIONS(featureConfig),
        ...sections,
--      ...PREFS_AFTER_SECTIONS,
+-      ...PREFS_AFTER_SECTIONS(featureConfig),
      ]);
    }
  
-@@ -157,6 +156,11 @@
+@@ -216,6 +215,11 @@
        const { feed: name, titleString = {}, descString, nestedPrefs = [] } =
          prefData || {};
  
@@ -319,7 +315,7 @@
        // Don't show any sections that we don't want to expose in preferences UI
        if (shouldHidePref) {
          return;
-@@ -181,19 +185,6 @@
+@@ -244,19 +248,6 @@
  
        linkPref(checkbox, name, "bool");
  

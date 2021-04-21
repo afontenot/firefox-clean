@@ -5,7 +5,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=83.0
+pkgver=88.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -14,7 +14,7 @@ url="https://www.mozilla.org/firefox/"
 depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm jack gtk2 nodejs cbindgen nasm
-             python-setuptools python-psutil python-zstandard lld)
+             python-setuptools python-psutil python-zstandard lld dump_syms)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -26,15 +26,16 @@ provides=("firefox=$pkgver")
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         0001-Use-remoting-name-for-GDK-application-names.patch
         $_pkgname.desktop disable-pocket-addon.diff disable-discoverystream.diff 
-        add-restart.diff allow-removing-menu-button.diff)
-sha256sums=('d69e84e8b8449f828683d274c24e03095858362bfed21b08bdd7fe715eea5398'
+        add-restart.diff allow-removing-menu-button.diff disable-topsite-sponsors.diff)
+sha256sums=('6b50dbfb393f843e4401e23965a1d8f7fd44b5a7628d95138294094094eee297'
             'SKIP'
-            '1dba448eb1605c9dc73c22861a5394b50055909399f056baee4887b29af1b51e'
+            '1b6814e85f13dcf069482ad1acfc1a099661922c85e3344aa4ee059288506ccc'
             '298eae9de76ec53182f38d5c549d0379569916eebf62149f9d7f4a7edef36abf'
-            '4b10b17271d766286133e682455a4152adea7fe85e3a20626afb3b6146db23a2'
-            '9c0dd2a67693164199e4069b079cd930ba605d3107040d00d7538fab91f1c26f'
-            'dafb110a56fe362672755601e05653a55e186a34b0d8915bbc90fa603cc6e5e2'
-            'f53cac8cb4885758a446a7c9ed9d951a524524df5147594b50469fc1749368cc')
+            '837f7ff6915bddd1659d32c8301418594d0d409fe266864a867bced4e16751c3'
+            '70a210c66f4e3efbb4797e1b68e7e8b2641772e958ffd7af02aae64a4baa1908'
+            '376c5cfa828a8762dbc789d8f17c9cdce8444acec96f11aaba45e71fdd12bdc6'
+            'f53cac8cb4885758a446a7c9ed9d951a524524df5147594b50469fc1749368cc'
+            '71a5049ec90d6653a2cbc2b77f799fdf72e0996c336bdb4510f73ba97bbf9491')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
 prepare() {
@@ -50,15 +51,15 @@ prepare() {
   # Disable junk on the new tab page
   patch -Np1 -i ../disable-discoverystream.diff
 
+  # Disable topsite sponsored entries
+  patch -Np1 -i ../disable-topsite-sponsors.diff
+
   # Add restart to file menu
   patch -Np1 -i ../add-restart.diff
 
   # Allow user to remove menu button
   # Work in progress, not finished
   # patch -Np1 -i ../allow-removing-menu-button.diff
-
-  # Weird python2 error, why aren't they seeing this with official build?
-  #patch -Np1 -i ../fix-mozbuild-py.diff
 
   # I recommend we take off and nuke the site from orbit.
   # It's the only way to be sure.
@@ -75,11 +76,6 @@ ac_add_options --enable-optimize
 ac_add_options --enable-rust-simd
 ac_add_options --enable-linker=lld
 ac_add_options --disable-elf-hack
-export CC='clang --target=x86_64-unknown-linux-gnu'
-export CXX='clang++ --target=x86_64-unknown-linux-gnu'
-export AR=llvm-ar
-export NM=llvm-nm
-export RANLIB=llvm-ranlib
 
 # Branding
 ac_add_options --enable-official-branding

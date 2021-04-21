@@ -1,0 +1,84 @@
+--- a/browser/components/newtab/lib/AboutPreferences.jsm.orig   2021-04-20 19:45:48.762626291 +0000
++++ b/browser/components/newtab/lib/AboutPreferences.jsm        2021-04-20 19:46:41.841783544 +0000
+@@ -48,18 +48,7 @@
+           ? "home-prefs-shortcuts-description"
+           : "home-prefs-topsites-description",
+       get nestedPrefs() {
+-        return Services.prefs.getBoolPref("browser.topsites.useRemoteSetting")
+-          ? [
+-              {
+-                name: "showSponsoredTopSites",
+-                titleString:
+-                  newNewtabExperienceEnabled || customizationMenuEnabled
+-                    ? "home-prefs-shortcuts-by-option-sponsored"
+-                    : "home-prefs-topsites-by-option-sponsored",
+-                eventSource: "SPONSORED_TOP_SITES",
+-              },
+-            ]
+-          : [];
++        return [];
+       },
+     },
+     icon: "topsites",
+--- a/browser/components/newtab/lib/TopSitesFeed.jsm.orig   2021-04-20 19:32:31.239029878 +0000
++++ b/browser/components/newtab/lib/TopSitesFeed.jsm        2021-04-20 19:34:07.097892109 +0000
+@@ -233,21 +233,7 @@
+       }
+       if (siteData.search_shortcut) {
+         link = await this.topSiteToSearchTopSite(link);
+-      } else if (siteData.sponsored_position) {
+-        const {
+-          sponsored_position,
+-          sponsored_tile_id,
+-          sponsored_impression_url,
+-          sponsored_click_url,
+-        } = siteData;
+-        link = {
+-          sponsored_position,
+-          sponsored_tile_id,
+-          sponsored_impression_url,
+-          sponsored_click_url,
+-          ...link,
+-        };
+-      }
++      } 
+       DEFAULT_TOP_SITES.push(link);
+     }
+ 
+@@ -548,14 +534,7 @@
+         continue;
+       }
+       if (link.sponsored_position) {
+-        if (!prefValues[SHOW_SPONSORED_PREF]) {
+-          continue;
+-        }
+-        sponsored[link.sponsored_position - 1] = link;
+-
+-        // Unpin search shortcut if present for the sponsored link to be shown
+-        // instead.
+-        this._unpinSearchShortcut(link.hostname);
++        continue;
+       } else {
+         notBlockedDefaultSites.push(
+           searchShortcutsExperiment
+@@ -635,20 +614,6 @@
+ 
+     // Insert the original pinned sites into the deduped frecent and defaults.
+     let withPinned = insertPinned(checkedAdult, pinned);
+-    // Insert sponsored sites at their desired position.
+-    dedupedSponsored.forEach(link => {
+-      if (!link) {
+-        return;
+-      }
+-      let index = link.sponsored_position - 1;
+-      if (index > withPinned.length) {
+-        withPinned[index] = link;
+-      } else {
+-        withPinned.splice(index, 0, link);
+-      }
+-    });
+-    // Remove excess items after we inserted sponsored ones.
+-    withPinned = withPinned.slice(0, numItems);
+ 
+     // Now, get a tippy top icon, a rich icon, or screenshot for every item
+     for (const link of withPinned) {

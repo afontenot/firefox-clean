@@ -1,26 +1,26 @@
-diff -r 8337ebb86a42 browser/components/moz.build
---- a/browser/components/moz.build      Thu Dec 06 15:18:54 2018 -0500
-+++ b/browser/components/moz.build      Tue Dec 11 20:42:07 2018 -0800
-@@ -44,7 +44,6 @@
-     'newtab',
-     'originattributes',
-     'places',
--    'pocket',
-     'preferences',
-     'privatebrowsing',
-     'resistfingerprinting',
+diff -u browser/components/moz.build.orig browser/components/moz.build
+--- a/browser/components/moz.build.orig   2020-12-16 16:42:10.547775427 +0000
++++ b/browser/components/moz.build        2020-12-16 17:03:30.568971423 +0000
+@@ -43,7 +43,6 @@
+     "originattributes",
+     "ion",
+     "places",
+-    "pocket",
+     "preferences",
+     "privatebrowsing",
+     "prompts",
 diff -u browser/components/BrowserGlue.jsm.orig browser/components/BrowserGlue.jsm
---- a/browser/components/BrowserGlue.jsm.orig     2020-06-03 01:04:50.000000000 +0000
-+++ b/browser/components/BrowserGlue.jsm  2020-06-04 03:43:49.379828932 +0000
-@@ -681,7 +681,6 @@
+--- a/browser/components/BrowserGlue.jsm.orig     2021-01-18 18:29:32.000000000 +0000
++++ b/browser/components/BrowserGlue.jsm  2021-02-03 00:47:10.357303253 +0000
+@@ -73,7 +73,6 @@
    RFPHelper: "resource://gre/modules/RFPHelper.jsm",
    SafeBrowsing: "resource://gre/modules/SafeBrowsing.jsm",
    Sanitizer: "resource:///modules/Sanitizer.jsm",
 -  SaveToPocket: "chrome://pocket/content/SaveToPocket.jsm",
-   SearchTelemetry: "resource:///modules/SearchTelemetry.jsm",
+   SearchSERPTelemetry: "resource:///modules/SearchSERPTelemetry.jsm",
    SessionStartup: "resource:///modules/sessionstore/SessionStartup.jsm",
    SessionStore: "resource:///modules/sessionstore/SessionStore.jsm",
-@@ -1309,8 +1308,6 @@
+@@ -1361,8 +1360,6 @@
        Normandy.init();
      }
  
@@ -28,22 +28,11 @@ diff -u browser/components/BrowserGlue.jsm.orig browser/components/BrowserGlue.j
 -
      AboutHomeStartupCache.init();
  
-     Services.obs.notifyObservers(null, "browser-ui-startup-complete"); 
+     Services.obs.notifyObservers(null, "browser-ui-startup-complete");
 diff -r 164a57c0cdf0 browser/base/content/browser.xhtml
---- a/browser/base/content/browser.xhtml.orig     2020-06-25 18:13:44.000000000 +0000
-+++ b/browser/base/content/browser.xhtml  2020-06-30 08:10:42.848814387 +0000
-@@ -1465,10 +1465,6 @@
-                        label="&bookmarksSubview.label;"
-                        closemenu="none"
-                        oncommand="BookmarkingUI.showSubView(this);"/>
--        <toolbarbutton id="appMenu-library-pocket-button"
--                       class="subviewbutton subviewbutton-iconic"
--                       label="&pocketMenuitem.label;"
--                       oncommand="Pocket.openList(event)"/>
-         <toolbarbutton id="appMenu-library-history-button"
-                        class="subviewbutton subviewbutton-iconic subviewbutton-nav"
-                        label="&historyMenu.label;"
-@@ -1901,12 +1897,6 @@
+--- a/browser/base/content/browser.xhtml.orig     2021-04-18 02:08:26.551737670 +0000
++++ b/browser/base/content/browser.xhtml  2021-04-18 02:08:45.392755610 +0000
+@@ -2007,12 +2007,6 @@
                         data-l10n-id="urlbar-page-action-button"
                         onmousedown="BrowserPageActions.mainButtonClicked(event);"
                         onkeypress="BrowserPageActions.mainButtonClicked(event);"/>

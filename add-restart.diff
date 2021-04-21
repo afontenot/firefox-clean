@@ -1,16 +1,16 @@
---- a/browser/base/content/browser-menubar.inc.orig       2019-10-22 00:25:42.885043896 +0000
-+++ b/browser/base/content/browser-menubar.inc    2019-10-22 00:28:41.502321848 +0000
-@@ -66,6 +66,10 @@
+--- a/browser/base/content/browser-menubar.inc.orig      2021-04-18 02:56:42.022816953 +0000 
++++ b/browser/base/content/browser-menubar.inc    2021-04-18 02:59:48.568919168 +0000
+@@ -75,6 +75,10 @@
                  <menuitem id="goOfflineMenuitem"
                            type="checkbox"
                            command="cmd_toggleOfflineStatus" data-l10n-id="menu-file-go-offline"/>
-+                <menuitem id="menu_restart"
++               <menuitem id="menu_restart"
 +                          label="&menu_restart.label;"
 +                          accesskey="&menu_restart.accesskey;"
-+                          command="cmd_restart"/>              
- <!-- We need to leave those strings in DTD until bug 1568133 is fixed. -->
++                          command="cmd_restart"/> 
                  <menuitem id="menu_FileQuitItem"
- #ifdef XP_WIN
+ #ifdef XP_MACOSX
+                           data-l10n-id="menu-quit-mac"
 diff -r 84219fbf133c browser/base/content/browser-sets.inc
 --- a/browser/base/content/browser-sets.inc     Wed Oct 17 18:50:12 2018 +0000
 +++ b/browser/base/content/browser-sets.inc     Tue Oct 23 18:42:49 2018 -0700
@@ -45,15 +45,15 @@ diff -r 150c70d39363 browser/base/content/browser.js
  function safeModeRestart() {
    if (Services.appinfo.inSafeMode) {
 diff -r 150c70d39363 browser/locales/en-US/chrome/browser/browser.dtd
---- a/browser/locales/en-US/chrome/browser/browser.dtd	Tue Sep 18 16:08:09 2018 +0000
-+++ b/browser/locales/en-US/chrome/browser/browser.dtd	Wed Sep 26 03:08:16 2018 -0700
-@@ -692,6 +692,9 @@
+--- a/browser/locales/en-US/chrome/browser/browser.dtd	2021-04-18 02:50:40.651217776 +0000
++++ b/browser/locales/en-US/chrome/browser/browser.dtd	2021-04-18 02:52:28.581047127 +0000
+@@ -149,6 +149,9 @@
+ 
  <!ENTITY sidebarCloseButton.tooltip     "Close sidebar">
- <!ENTITY sidebarMenuClose.label         "Close Sidebar">
  
 +<!ENTITY menu_restart.label            "Restart">
 +<!ENTITY menu_restart.accesskey                "R">
 +
- <!ENTITY quitApplicationCmdWin2.label       "Exit">
- <!ENTITY quitApplicationCmdWin2.accesskey   "x">
- <!ENTITY quitApplicationCmdWin2.tooltip     "Exit &brandShorterName;">
+ <!ENTITY allowPopups.accesskey "p">
+ <!-- On Windows we use the term "Options" to describe settings, but
+      on Linux and Mac OS X we use "Preferences" - carry that distinction
