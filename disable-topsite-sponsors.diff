@@ -20,13 +20,81 @@
        },
      },
      icon: "topsites",
---- a/browser/components/newtab/lib/TopSitesFeed.jsm.orig   2021-04-20 19:32:31.239029878 +0000
-+++ b/browser/components/newtab/lib/TopSitesFeed.jsm        2021-04-20 19:34:07.097892109 +0000
-@@ -233,21 +233,7 @@
-       }
-       if (siteData.search_shortcut) {
-         link = await this.topSiteToSearchTopSite(link);
+--- a/browser/components/newtab/lib/TopSitesFeed.jsm.orig	2021-09-03 10:50:59.318426528 +0000
++++ b/browser/components/newtab/lib/TopSitesFeed.jsm	2021-09-03 10:56:08.302926467 +0000
+@@ -321,32 +321,6 @@
+     // Read defaults from contile.
+     const contileEnabled = Services.prefs.getBoolPref(CONTILE_ENABLED_PREF);
+     let hasContileTiles = false;
+-    if (contileEnabled) {
+-      let sponsoredPosition = 1;
+-      for (let site of this._contile.sites) {
+-        let hostname = shortURL(site);
+-        let link = {
+-          isDefault: true,
+-          url: site.url,
+-          hostname,
+-          sendAttributionRequest: false,
+-          label: site.name,
+-          show_sponsored_label: hostname !== "yandex",
+-          sponsored_position: sponsoredPosition++,
+-          sponsored_click_url: site.click_url,
+-          sponsored_impression_url: site.impression_url,
+-          sponsored_tile_id: site.id,
+-        };
+-        if (site.image_url && site.image_size >= MIN_FAVICON_SIZE) {
+-          // Only use the image from Contile if it's hi-res, otherwise, fallback
+-          // to the built-in favicons.
+-          link.favicon = site.image_url;
+-          link.faviconSize = site.image_size;
+-        }
+-        DEFAULT_TOP_SITES.push(link);
+-      }
+-      hasContileTiles = sponsoredPosition > 1;
+-    }
+ 
+     // Read defaults from remote settings.
+     this._useRemoteSetting = true;
+@@ -356,60 +330,6 @@
+       Services.prefs.getStringPref(TOP_SITES_BLOCKED_SPONSORS_PREF, "[]")
+     );
+ 
+-    for (let siteData of remoteSettingData) {
+-      let hostname = shortURL(siteData);
+-      // Drop default sites when Contile already provided a sponsored one with
+-      // the same host name.
+-      if (
+-        contileEnabled &&
+-        DEFAULT_TOP_SITES.findIndex(site => site.hostname === hostname) > -1
+-      ) {
+-        continue;
+-      }
+-      // Also drop those sponsored sites that were blocked by the user before
+-      // with the same hostname.
+-      if (
+-        siteData.sponsored_position &&
+-        sponsoredBlocklist.includes(hostname)
+-      ) {
+-        continue;
+-      }
+-      let link = {
+-        isDefault: true,
+-        url: siteData.url,
+-        hostname,
+-        sendAttributionRequest: !!siteData.send_attribution_request,
+-      };
+-      if (siteData.url_urlbar_override) {
+-        link.url_urlbar = siteData.url_urlbar_override;
+-      }
+-      if (siteData.title) {
+-        link.label = siteData.title;
+-      }
+-      if (siteData.search_shortcut) {
+-        link = await this.topSiteToSearchTopSite(link);
 -      } else if (siteData.sponsored_position) {
+-        if (contileEnabled && hasContileTiles) {
+-          continue;
+-        }
 -        const {
 -          sponsored_position,
 -          sponsored_tile_id,
@@ -38,17 +106,21 @@
 -          sponsored_tile_id,
 -          sponsored_impression_url,
 -          sponsored_click_url,
+-          show_sponsored_label: link.hostname !== "yandex",
 -          ...link,
 -        };
 -      }
-+      } 
-       DEFAULT_TOP_SITES.push(link);
-     }
+-      DEFAULT_TOP_SITES.push(link);
+-    }
+-
+     this.refresh({ broadcast: true, isStartup });
+   }
  
-@@ -548,14 +534,7 @@
+@@ -712,22 +632,6 @@
+       ) {
          continue;
        }
-       if (link.sponsored_position) {
+-      if (link.sponsored_position) {
 -        if (!prefValues[SHOW_SPONSORED_PREF]) {
 -          continue;
 -        }
@@ -57,11 +129,17 @@
 -        // Unpin search shortcut if present for the sponsored link to be shown
 -        // instead.
 -        this._unpinSearchShortcut(link.hostname);
-+        continue;
-       } else {
-         notBlockedDefaultSites.push(
-           searchShortcutsExperiment
-@@ -635,20 +614,6 @@
+-      } else {
+-        notBlockedDefaultSites.push(
+-          searchShortcutsExperiment
+-            ? await this.topSiteToSearchTopSite(link)
+-            : link
+-        );
+-      }
+     }
+ 
+     // Get pinned links augmented with desired properties
+@@ -811,20 +715,6 @@
  
      // Insert the original pinned sites into the deduped frecent and defaults.
      let withPinned = insertPinned(checkedAdult, pinned);
