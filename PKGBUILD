@@ -5,7 +5,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=88.0
+pkgver=92.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -13,29 +13,31 @@ license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
 depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
-             autoconf2.13 rust clang llvm jack gtk2 nodejs cbindgen nasm
+             autoconf2.13 rust clang llvm jack nodejs cbindgen nasm
              python-setuptools python-psutil python-zstandard lld dump_syms)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
             'speech-dispatcher: Text-to-Speech'
-            'hunspell-en_US: Spell checking, American English')
+            'hunspell-en_US: Spell checking, American English'
+            'xdg-desktop-portal: Screensharing with Wayland')
 options=(!emptydirs !makeflags !strip)
 conflicts=('firefox')
 provides=("firefox=$pkgver")
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         0001-Use-remoting-name-for-GDK-application-names.patch
-        $_pkgname.desktop disable-pocket-addon.diff disable-discoverystream.diff 
+        $_pkgname.desktop identity-icons-brand.svg disable-pocket-addon.diff disable-discoverystream.diff 
         add-restart.diff allow-removing-menu-button.diff disable-topsite-sponsors.diff)
-sha256sums=('6b50dbfb393f843e4401e23965a1d8f7fd44b5a7628d95138294094094eee297'
+sha256sums=('299a472373021cc9194449c9f4bb962d5f74ef05e8af0448c589761ea34fbc84'
             'SKIP'
-            '1b6814e85f13dcf069482ad1acfc1a099661922c85e3344aa4ee059288506ccc'
+            'd7c7a65c4b7ec9ea40df129724ffb369d3f775b0514e3c267c52eec6d284b5e6'
             '298eae9de76ec53182f38d5c549d0379569916eebf62149f9d7f4a7edef36abf'
-            '837f7ff6915bddd1659d32c8301418594d0d409fe266864a867bced4e16751c3'
-            '70a210c66f4e3efbb4797e1b68e7e8b2641772e958ffd7af02aae64a4baa1908'
+            'a9b8b4a0a1f4a7b4af77d5fc70c2686d624038909263c795ecc81e0aec7711e9'
+            '028caedaf0c66a401c30b34ad267daeb4288482d6c59bc2926567e2abe8ebe9b'
+            '225e363938816a7bb83185504489facefb37ce96c78cfd60a0aae4a96b7ce861'
             '376c5cfa828a8762dbc789d8f17c9cdce8444acec96f11aaba45e71fdd12bdc6'
             'f53cac8cb4885758a446a7c9ed9d951a524524df5147594b50469fc1749368cc'
-            '71a5049ec90d6653a2cbc2b77f799fdf72e0996c336bdb4510f73ba97bbf9491')
+            '0b10ccf950886cf350c00e1041d50c5034adf2915461518e865b60c376ee36c8')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
 prepare() {
@@ -76,6 +78,7 @@ ac_add_options --enable-optimize
 ac_add_options --enable-rust-simd
 ac_add_options --enable-linker=lld
 ac_add_options --disable-elf-hack
+ac_add_options --disable-bootstrap
 
 # Branding
 ac_add_options --enable-official-branding
@@ -85,7 +88,7 @@ ac_add_options --with-unsigned-addon-scopes=app,system
 ac_add_options --allow-addon-sideload
 export MOZILLA_OFFICIAL=1
 export MOZ_APP_REMOTINGNAME=${_pkgname//-/}
-export MOZ_REQUIRE_SIGNING=0
+export MOZ_REQUIRE_SIGNING=""
 
 # System libraries
 ac_add_options --with-system-nspr
@@ -230,7 +233,9 @@ END
     "$pkgdir/usr/share/icons/hicolor/192x192/apps/$_pkgname.png"
   install -Dvm644 browser/branding/$theme/content/about-logo@2x.png \
     "$pkgdir/usr/share/icons/hicolor/384x384/apps/$_pkgname.png"
-  install -Dvm644 browser/branding/$theme/content/identity-icons-brand.svg \
+  install -Dvm644 browser/branding/$theme/content/about-logo.svg \
+    "$pkgdir/usr/share/icons/hicolor/scalable/apps/$_pkgname.svg"
+  install -Dvm644 ../identity-icons-brand.svg \
     "$pkgdir/usr/share/icons/hicolor/symbolic/apps/$_pkgname-symbolic.svg"
 
   install -Dvm644 ../$_pkgname.desktop \

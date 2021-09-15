@@ -1,6 +1,6 @@
 pkgbase = firefox-clean
 	pkgdesc = Standalone web browser from mozilla.org, with defaults for more privacy
-	pkgver = 88.0
+	pkgver = 92.0
 	pkgrel = 1
 	url = https://www.mozilla.org/firefox/
 	arch = x86_64
@@ -20,7 +20,6 @@ pkgbase = firefox-clean
 	makedepends = clang
 	makedepends = llvm
 	makedepends = jack
-	makedepends = gtk2
 	makedepends = nodejs
 	makedepends = cbindgen
 	makedepends = nasm
@@ -42,30 +41,32 @@ pkgbase = firefox-clean
 	optdepends = pulseaudio: Audio support
 	optdepends = speech-dispatcher: Text-to-Speech
 	optdepends = hunspell-en_US: Spell checking, American English
-	provides = firefox=88.0
+	optdepends = xdg-desktop-portal: Screensharing with Wayland
+	provides = firefox=92.0
 	conflicts = firefox
 	options = !emptydirs
 	options = !makeflags
 	options = !strip
-	source = https://archive.mozilla.org/pub/firefox/releases/88.0/source/firefox-88.0.source.tar.xz
-	source = https://archive.mozilla.org/pub/firefox/releases/88.0/source/firefox-88.0.source.tar.xz.asc
+	source = https://archive.mozilla.org/pub/firefox/releases/92.0/source/firefox-92.0.source.tar.xz
+	source = https://archive.mozilla.org/pub/firefox/releases/92.0/source/firefox-92.0.source.tar.xz.asc
 	source = 0001-Use-remoting-name-for-GDK-application-names.patch
 	source = firefox.desktop
+	source = identity-icons-brand.svg
 	source = disable-pocket-addon.diff
 	source = disable-discoverystream.diff
 	source = add-restart.diff
 	source = allow-removing-menu-button.diff
 	source = disable-topsite-sponsors.diff
 	validpgpkeys = 14F26682D0916CDD81E37B6D61B7B526D98F0353
-	sha256sums = 6b50dbfb393f843e4401e23965a1d8f7fd44b5a7628d95138294094094eee297
+	sha256sums = 299a472373021cc9194449c9f4bb962d5f74ef05e8af0448c589761ea34fbc84
 	sha256sums = SKIP
-	sha256sums = 1b6814e85f13dcf069482ad1acfc1a099661922c85e3344aa4ee059288506ccc
+	sha256sums = d7c7a65c4b7ec9ea40df129724ffb369d3f775b0514e3c267c52eec6d284b5e6
 	sha256sums = 298eae9de76ec53182f38d5c549d0379569916eebf62149f9d7f4a7edef36abf
-	sha256sums = 837f7ff6915bddd1659d32c8301418594d0d409fe266864a867bced4e16751c3
-	sha256sums = 70a210c66f4e3efbb4797e1b68e7e8b2641772e958ffd7af02aae64a4baa1908
+	sha256sums = a9b8b4a0a1f4a7b4af77d5fc70c2686d624038909263c795ecc81e0aec7711e9
+	sha256sums = 028caedaf0c66a401c30b34ad267daeb4288482d6c59bc2926567e2abe8ebe9b
+	sha256sums = 225e363938816a7bb83185504489facefb37ce96c78cfd60a0aae4a96b7ce861
 	sha256sums = 376c5cfa828a8762dbc789d8f17c9cdce8444acec96f11aaba45e71fdd12bdc6
 	sha256sums = f53cac8cb4885758a446a7c9ed9d951a524524df5147594b50469fc1749368cc
-	sha256sums = 71a5049ec90d6653a2cbc2b77f799fdf72e0996c336bdb4510f73ba97bbf9491
+	sha256sums = 0b10ccf950886cf350c00e1041d50c5034adf2915461518e865b60c376ee36c8
 
 pkgname = firefox-clean
-
