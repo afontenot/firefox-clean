@@ -5,7 +5,7 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=92.0
+pkgver=93.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
@@ -28,14 +28,14 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         0001-Use-remoting-name-for-GDK-application-names.patch
         $_pkgname.desktop identity-icons-brand.svg disable-pocket-addon.diff disable-discoverystream.diff 
         add-restart.diff allow-removing-menu-button.diff disable-topsite-sponsors.diff)
-sha256sums=('299a472373021cc9194449c9f4bb962d5f74ef05e8af0448c589761ea34fbc84'
+sha256sums=('a78f080f5849bc284b84299f3540934a12e961a7ea368b592ae6576ea1f97102'
             'SKIP'
-            'd7c7a65c4b7ec9ea40df129724ffb369d3f775b0514e3c267c52eec6d284b5e6'
+            'bb9769a8fe720abea2bba5b895c70c4fba0d44bb553399d83350268edf85cdeb'
             '298eae9de76ec53182f38d5c549d0379569916eebf62149f9d7f4a7edef36abf'
             'a9b8b4a0a1f4a7b4af77d5fc70c2686d624038909263c795ecc81e0aec7711e9'
             '028caedaf0c66a401c30b34ad267daeb4288482d6c59bc2926567e2abe8ebe9b'
             '225e363938816a7bb83185504489facefb37ce96c78cfd60a0aae4a96b7ce861'
-            '376c5cfa828a8762dbc789d8f17c9cdce8444acec96f11aaba45e71fdd12bdc6'
+            'c18fb7e9f17c0eac8487c0dffa3286b0ab56e66d18ecc8a8f3376e687f2d48fc'
             'f53cac8cb4885758a446a7c9ed9d951a524524df5147594b50469fc1749368cc'
             '0b10ccf950886cf350c00e1041d50c5034adf2915461518e865b60c376ee36c8')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
@@ -222,6 +222,19 @@ pref("security.ssl3.rsa_des_ede3_sha", false);
 pref("security.ssl.require_safe_negotiation", true);
 pref("network.IDN_show_punycode", true);
 pref("security.certerrors.mitm.auto_enable_enterprise_roots", false);
+END
+
+  local distini="$pkgdir/usr/lib/$pkgname/distribution/distribution.ini"
+  install -Dvm644 /dev/stdin "$distini" <<END
+[Global]
+id=archlinux
+version=1.0
+about=Mozilla Firefox for Arch Linux
+
+[Preferences]
+app.distributor=archlinux
+app.distributor.channel=$pkgname
+app.partner.archlinux=archlinux
 END
 
   local i theme=official
