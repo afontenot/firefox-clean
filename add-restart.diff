@@ -1,12 +1,10 @@
---- a/browser/base/content/browser-menubar.inc.orig      2021-04-18 02:56:42.022816953 +0000 
-+++ b/browser/base/content/browser-menubar.inc    2021-04-18 02:59:48.568919168 +0000
-@@ -75,6 +75,10 @@
+--- a/browser/base/content/browser-menubar.inc.orig       2021-09-27 15:46:26.000000000 -0700
++++ b/browser/base/content/browser-menubar.inc    2021-10-06 23:11:36.333294555 -0700
+@@ -79,6 +79,8 @@
                  <menuitem id="goOfflineMenuitem"
                            type="checkbox"
                            command="cmd_toggleOfflineStatus" data-l10n-id="menu-file-go-offline"/>
-+               <menuitem id="menu_restart"
-+                          label="&menu_restart.label;"
-+                          accesskey="&menu_restart.accesskey;"
++                <menuitem id="menu_restart" data-l10n-id="menu-file-restart-browser"
 +                          command="cmd_restart"/> 
                  <menuitem id="menu_FileQuitItem"
  #ifdef XP_MACOSX
@@ -44,16 +42,14 @@ diff -r 150c70d39363 browser/base/content/browser.js
  // Prompt user to restart the browser in safe mode
  function safeModeRestart() {
    if (Services.appinfo.inSafeMode) {
-diff -r 150c70d39363 browser/locales/en-US/chrome/browser/browser.dtd
---- a/browser/locales/en-US/chrome/browser/browser.dtd	2021-04-18 02:50:40.651217776 +0000
-+++ b/browser/locales/en-US/chrome/browser/browser.dtd	2021-04-18 02:52:28.581047127 +0000
-@@ -149,6 +149,9 @@
+--- a/browser/locales/en-US/browser/menubar.ftl.orig      2021-10-06 23:09:32.893296410 -0700
++++ b/browser/locales/en-US/browser/menubar.ftl   2021-10-06 23:09:49.896629491 -0700
+@@ -100,6 +100,9 @@
+ menu-file-go-offline =
+     .label = Work Offline
+     .accesskey = k
++menu-file-restart-browser =
++    .label = Restart
++    .accesskey = r
  
- <!ENTITY sidebarCloseButton.tooltip     "Close sidebar">
- 
-+<!ENTITY menu_restart.label            "Restart">
-+<!ENTITY menu_restart.accesskey                "R">
-+
- <!ENTITY allowPopups.accesskey "p">
- <!-- On Windows we use the term "Options" to describe settings, but
-      on Linux and Mac OS X we use "Preferences" - carry that distinction
+ ## Edit Menu
