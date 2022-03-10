@@ -5,47 +5,45 @@
 
 pkgname=firefox-clean
 _pkgname=firefox
-pkgver=93.0
+pkgver=98.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, with defaults for more privacy"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
-depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
+depends=(gtk3 libxt mime-types dbus-glib ffmpeg4.4 nss ttf-font libpulse)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm jack nodejs cbindgen nasm
-             python-setuptools python-psutil python-zstandard lld dump_syms)
+             python-setuptools python-psutil python-zstandard lld dump_syms
+             wasi-compiler-rt wasi-libc wasi-libc++ wasi-libc++abi)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
             'speech-dispatcher: Text-to-Speech'
             'hunspell-en_US: Spell checking, American English'
             'xdg-desktop-portal: Screensharing with Wayland')
-options=(!emptydirs !makeflags !strip)
-conflicts=('firefox')
-provides=("firefox=$pkgver")
+options=(!emptydirs !makeflags !strip !lto !debug)
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
-        0001-Use-remoting-name-for-GDK-application-names.patch
-        $_pkgname.desktop identity-icons-brand.svg disable-pocket-addon.diff disable-discoverystream.diff 
-        add-restart.diff allow-removing-menu-button.diff disable-topsite-sponsors.diff)
-sha256sums=('a78f080f5849bc284b84299f3540934a12e961a7ea368b592ae6576ea1f97102'
+        $_pkgname.desktop
+        identity-icons-brand.svg disable-pocket-addon.diff
+        disable-discoverystream.diff add-restart.diff
+        allow-removing-menu-button.diff disable-topsite-sponsors.diff)
+sha256sums=('fd0a4c11d007d9045706667eb0f99f9b7422945188424cb937bfef530cb6f4dd'
             'SKIP'
-            'bb9769a8fe720abea2bba5b895c70c4fba0d44bb553399d83350268edf85cdeb'
             '298eae9de76ec53182f38d5c549d0379569916eebf62149f9d7f4a7edef36abf'
             'a9b8b4a0a1f4a7b4af77d5fc70c2686d624038909263c795ecc81e0aec7711e9'
             '028caedaf0c66a401c30b34ad267daeb4288482d6c59bc2926567e2abe8ebe9b'
-            '225e363938816a7bb83185504489facefb37ce96c78cfd60a0aae4a96b7ce861'
+            'fce0b197a2e120fd94329d02ca23b0f74eb3befca61507da94a72a6baf9679dd'
             'c18fb7e9f17c0eac8487c0dffa3286b0ab56e66d18ecc8a8f3376e687f2d48fc'
             'f53cac8cb4885758a446a7c9ed9d951a524524df5147594b50469fc1749368cc'
-            '0b10ccf950886cf350c00e1041d50c5034adf2915461518e865b60c376ee36c8')
+            'ed4f34b0ed1d37713d77fe078a696b58db47be387ecb043652f31447090046f9')
+conflicts=('firefox')
+provides=("firefox=$pkgver")
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
 prepare() {
   mkdir -p mozbuild
   cd firefox-$pkgver
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
-  patch -Np1 -i ../0001-Use-remoting-name-for-GDK-application-names.patch
 
   # Disable anti-features
   patch -Np1 -i ../disable-pocket-addon.diff
@@ -79,6 +77,7 @@ ac_add_options --enable-rust-simd
 ac_add_options --enable-linker=lld
 ac_add_options --disable-elf-hack
 ac_add_options --disable-bootstrap
+ac_add_options --with-wasi-sysroot=/usr/share/wasi-sysroot
 
 # Branding
 ac_add_options --enable-official-branding
