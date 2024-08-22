@@ -1,3 +1,5 @@
+**This project has been archived! It became too difficult to maintain as a single person trying to patch a very large project. I have moved to [LibreWolf](https://librewolf.net/) which maintains a similar patch set, and recommend others do as well.**
+
 # firefox-clean
 A PKGBUILD for Firefox with defaults for the privacy-conscious and power users
 
